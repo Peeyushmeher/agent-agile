@@ -1,6 +1,6 @@
 ---
 name: aa-new-project
-description: Use when the user wants to plan a new project from a clear idea, has already run aa-grill, or invokes /aa-new-project. Runs the 8-question intake, drafts PROJECT.md and ROADMAP.md, and slices Epic 1 into worker-ready stories.
+description: Use when the user wants to plan a new project from a clear idea, has already locked an idea with aa-grill, or invokes /aa-new-project.
 license: MIT
 metadata:
   system: agent-agile
@@ -29,4 +29,4 @@ Draft the plan inline in this conversation, following **Drafting the plan** — 
 
 ## Handoff
 
-If the roadmap has more than one epic, tell the user the plan must go through the panel before anything runs, and instruct them to run `/aa-panel` next — do not start execution first. If the roadmap is a single throwaway epic, the panel is skippable per the playbook's anti-ceremony fast path; say so and name the next command instead.
+If the roadmap has more than one epic, tell the user the plan must go through the panel before anything runs, and instruct them to run `/aa-panel` next — do not start execution first. If the roadmap is a single throwaway epic, the panel may be skipped — see the gate rule in `playbooks/critics.md` section `Panel protocol`; say so and name the next command instead.
