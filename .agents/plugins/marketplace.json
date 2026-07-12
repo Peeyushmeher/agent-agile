@@ -1,0 +1,16 @@
+{
+  "name": "agent-agile",
+  "owner": {
+    "name": "Peeyush Yerremsetty"
+  },
+  "plugins": [
+    {
+      "name": "agent-agile",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "description": "Agile planning + execution for AI coding agents."
+    }
+  ]
+}
