@@ -1,6 +1,6 @@
 ---
 name: aa-execute-epic
-description: Use when a sliced epic (story cards already written) is ready to build, or the user invokes /aa-execute-epic. Runs one epic from contracts through the review gate.
+description: Use when a sliced epic (story cards already written) is ready to build, or the user invokes /aa-execute-epic.
 license: MIT
 metadata:
   system: agent-agile

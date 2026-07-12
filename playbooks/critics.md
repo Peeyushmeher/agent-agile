@@ -30,7 +30,7 @@ The panel exists because a plan that reads well to the person who wrote it is no
 
 **Mission:** find every place a cheap-tier worker would have to guess.
 
-Story cards live at `epics/EPIC-NN/stories/S*.md`, one file per story, each with exactly four fields: **Goal**, **Files it owns**, **Acceptance check**, **Contracts consumed**. Run the worker-readiness test on **every** story card in the current epic — no sampling.
+Story cards live at `.planning/epics/EPIC-NN/stories/S*.md`, one file per story, each with exactly four fields: **Goal**, **Files it owns**, **Acceptance check**, **Contracts consumed**. Run the worker-readiness test on **every** story card in the current epic — no sampling.
 
 **Worker-readiness test:** simulate a fresh cheap-tier agent holding only the card plus CONTRACTS.md, and ask:
 1. Can it name every file it creates **and** every file it edits, as exact paths?
