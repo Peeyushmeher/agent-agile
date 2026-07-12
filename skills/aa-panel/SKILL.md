@@ -14,11 +14,11 @@ Read `playbooks/critics.md` in full — Panel protocol, Product critic, Spec aud
 
 ## Wiring
 
-1. Read the draft plan: `.planning/PROJECT.md`, `.planning/ROADMAP.md`, the current epic's story cards at `epics/EPIC-NN/stories/S*.md`, and `epics/EPIC-NN/CONTRACTS.md` if it exists.
+1. Read the draft plan: `.planning/PROJECT.md`, `.planning/ROADMAP.md`, the current epic's story cards at `.planning/epics/EPIC-NN/stories/S*.md`, and `.planning/epics/EPIC-NN/CONTRACTS.md` if it exists.
 2. Read `.planning/CONFIG.md` for the `smart_tier` and `commercial` fields.
 3. Spawn `aa-critic-product`, `aa-critic-spec`, and `aa-critic-execution` as parallel fresh subagents, each with the model configured for its tier in `.planning/CONFIG.md`. If `commercial: yes`, also spawn `aa-critic-market` the same way. Give each subagent exactly two inputs: its own section of `playbooks/critics.md`, verbatim, and the full draft plan gathered in step 1 — nothing else. They do not see each other's output.
 4. Collect every subagent's Verdict format block.
 5. Fix every `BLOCK` finding by invoking planner behavior per `playbooks/planner.md` — spawn a fresh `aa-planner` subagent with the model configured for the smart tier in `.planning/CONFIG.md`, or apply the fix inline in the main loop if already holding full planning context; inline is default. Only the critic(s) whose findings forced a structural change get re-run, and only once.
 6. Present the remaining `FLAG` findings plus the fixed plan to the user; the user's decision is the gate.
-7. If the market critic's verdict is `KILL`, present its evidence and recommend stopping instead of presenting the plan for approval. If the user agrees to stop, write `epics/EPIC-NN/LEARNINGS.md` from `playbooks/templates/LEARNINGS.md` explaining why, and stop.
+7. If the market critic's verdict is `KILL`, present its evidence and recommend stopping instead of presenting the plan for approval. If the user agrees to stop, write `.planning/epics/EPIC-NN/LEARNINGS.md` from `playbooks/templates/LEARNINGS.md` explaining why, and stop.
 8. Update `.planning/STATE.md` to record the outcome of the gate.

@@ -11,7 +11,7 @@ Read `playbooks/execution.md` section `Wave 0 — contracts`, and follow it exac
 
 **Inputs:** every story card in the current epic's `stories/` directory, specifically each card's `Contracts consumed` field — this tells you everything the stories will need to agree on without talking to each other.
 
-**Output:** `epics/EPIC-NN/CONTRACTS.md`, written from `playbooks/templates/CONTRACTS.md` — shared types, API schemas, data schema, function and module signatures, and naming and error-handling conventions, each fully specified (field names, types, error shapes), never named-but-undefined.
+**Output:** `.planning/epics/EPIC-NN/CONTRACTS.md`, written from `playbooks/templates/CONTRACTS.md` — shared types, API schemas, data schema, function and module signatures, and naming and error-handling conventions, each fully specified (field names, types, error shapes), never named-but-undefined.
 
 **Hard rules:**
 1. Cover everything every story card's `Contracts consumed` field references — an entry that's mentioned but not defined is the single most common cause of a Wave 2 collision.
