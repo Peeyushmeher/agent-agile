@@ -23,5 +23,5 @@ If the idea fails its own questions — no real user, no real switch reason, no 
 Once all seven questions produce real answers:
 
 1. Write `.planning/IDEA.md` from the template at `playbooks/templates/IDEA.md`, filling Problem, Exact user, The one action, Why now / why switch, Non-goals, and Success signal from the grill answers. Once written, IDEA.md is locked — do not reinterpret it later.
-2. Update `.planning/STATE.md` from the template at `playbooks/templates/STATE.md`: set Phase to `grill`, Now to "grill complete, IDEA.md locked", and Next to "run /aa-new-project".
+2. Update `.planning/STATE.md` from the template at `playbooks/templates/STATE.md`: set Project to a short working name for the idea (confirm it with the user in one breath before writing it), Phase to `grill`, Now to "grill complete, IDEA.md locked", Next to "run /aa-new-project", Pointers to `.planning/IDEA.md`, and Blockers to `none`.
 3. Tell the user the grill is done and offer `/aa-new-project` as the next step. State, using the Grill → intake mapping table, exactly which of the 8 intake questions are already pre-filled from this conversation and which three (hard constraints, riskiest unknown, review-batch appetite) will still be asked fresh.
