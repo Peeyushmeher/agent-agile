@@ -1,0 +1,152 @@
+# System — the methodology core
+
+This is the shared doctrine every other playbook and agent in this project builds on: how work is structured, where memory lives, how cost is spent, and how a sprint closes. Read it once per session if you're doing any planning, execution, or review work — the other playbooks (`playbooks/planner.md`, `playbooks/critics.md`, `playbooks/execution.md`) assume you already know this.
+
+The whole system exists to serve one constraint: **stories must be safely parallelizable by stateless agents, and every session must be resumable from files on disk alone.**
+
+**Judgment lives in files, not in the model.** This playbook, the planner's pushback patterns, the critics' attack lists — all of it ships as text, not as something a particular model happens to know. Swap the model underneath and the doctrine holds, because the doctrine was never in the model to begin with. When a real run surfaces a new failure mode, the fix is an addition to a playbook, not a note-to-self that evaporates at the end of the session.
+
+## The hierarchy
+
+```
+OKR          → why the project exists, and how we know it worked
+Initiative   → a big bet that moves a Key Result (1–3 per project)
+Epic         → one shippable slice = one agent wave = one sprint
+Story        → one agent's job: self-contained, own files, own acceptance check
+```
+
+There is no level below stories — the story IS the micro-task, sized for one agent in one shot. No story points, no ceremonies, no burndown.
+
+**Objective** — qualitative, one sentence: why this project exists.
+
+**Key Results** — 2–4 per objective. Each Key Result must pass three tests before it's accepted:
+
+1. **Measurable by a command or a count** — a number, not a vibe.
+2. **Outcome, not output** — "deploy the backend" is a task; "a stranger completes signup and their first action, unaided" is a Key Result.
+3. **Falsifiable at review time** — hit or missed, with no debate.
+
+A Key Result that fails any of these three tests gets pushed back on before planning proceeds. Never lock in a vague Key Result and hope it clarifies later.
+
+**Initiative** — the strategy connecting Key Results to work. Kill-filter applied to every epic: *does this epic serve an initiative? No → cut.*
+
+**Epic** — a demoable slice. Its definition of done is always a demo sentence: *"I can do X and see Y."* If you can't write that sentence, the epic isn't scoped yet.
+
+**Story card** — exactly four fields, no more:
+
+- **Goal** — one sentence.
+- **Files it owns** — an explicit list. This is the parallelism key: two stories can run at the same time only if their file lists don't intersect.
+- **Acceptance check** — a runnable command or a verifiable assertion, with the expected output.
+- **Contracts it consumes** — the shared interfaces it reads. A story never invents an interface; it only consumes what Wave 0 froze.
+
+Use `playbooks/templates/STORY.md` for the card format.
+
+A worked example of the chain: the Key Result "a stranger completes checkout unaided" motivates the Initiative "self-serve payment flow," which produces the Epic "guest can buy one item and see a confirmation," which slices into stories like "add the cart-total endpoint" (owns `api/cart.py`, acceptance check: `curl` the endpoint and assert the JSON total) and "wire the checkout button" (owns `ui/checkout.tsx`, acceptance check: click through and assert the confirmation renders). Each level narrows the one above it until a story is small enough that a worker never has to guess what "done" means.
+
+## The memory spine
+
+**If a fact isn't in a file, it doesn't exist.** Agents are stateless between sessions and between subagent dispatches — nothing "remembers" anything that wasn't written down. Every session opens by reading files; none of them carry context forward in their own head.
+
+```
+.planning/
+  IDEA.md           # grill output, when the project was grilled first. Locked once written.
+  PROJECT.md        # OKRs, initiatives, constraints, out-of-scope. Write-once-ish.
+  ROADMAP.md        # Epic list + status + demo sentences.
+  STATE.md          # THE BATON. Tiny. "You are here" + pointers to what to read next.
+  PREREQS.md        # Human shopping list (API keys, accounts, services) + verification status.
+  CONFIG.md         # model tiers, gate mode, harness notes.
+  epics/EPIC-NN/
+    CONTRACTS.md    # Wave 0 output: shared types, schemas, signatures. Frozen during the wave.
+    stories/S1.md…  # Story cards (four fields each).
+    stories/SN.report.md   # 3–5 lines per completed story. One file per story — parallel-safe, no collisions.
+    REPORTS.md      # Wave 2 concatenates the per-story report files into one.
+    DEMO.md         # Demo brief: what was built, how to test it, what to look for.
+    LEARNINGS.md    # Written at epic close: deviations, gotchas, contract changes.
+```
+
+Templates for each of these live at `playbooks/templates/<name>.md`.
+
+**Session protocol:** every session opens by reading `STATE.md`, follows its pointers to whatever else it names, does the work, then closes with exactly one `STATE.md` update. A crashed session, a new session, or a different machine picks up the baton the same way — by reading `STATE.md` first, nothing else.
+
+**In-wave (story to story):** parallel workers don't talk to each other — that's what makes them parallel. Their shared knowledge is `CONTRACTS.md`, written and frozen before any of them start. Their output is code plus one `SN.report.md` each. Knowledge from separate stories only merges at Wave 2.
+
+**Epic to epic (the three-file read rule):** the next epic's planning session reads exactly three things — `PROJECT.md`, `ROADMAP.md`, and the previous epic's `LEARNINGS.md`. Never the whole project history. Learnings are the compressed memory; the codebase itself is the ground truth for everything else. This is what keeps planning context small no matter how many epics have already shipped.
+
+Why this matters in practice: a ten-epic project never needs a session that reads all ten epics' worth of history to plan epic eleven. The three-file rule is the mechanism that makes long projects as cheap to plan late as they were to plan early — without it, planning cost would grow with project size instead of staying flat.
+
+## Sprints are scope-boxes
+
+A traditional sprint is a time-box that solves human problems — calendar sync, deadline pressure, stakeholder rhythm. Agents have none of those, so a sprint here is redefined:
+
+- **A sprint IS one epic execution run:** Wave 0 → Wave 1 → Wave 2. It ends when the epic's demo sentence is true — not when a clock runs out.
+- The real sprint boundary is the **human review gate** — how much finished work gets reviewed at once is a planning decision (set during intake), not a calendar decision.
+- The only other bound is practical: an epic must fit inside one orchestrated run without drowning agent context. That's enforced at slicing time, by keeping epics small enough to plan cleanly.
+
+No durations, no estimates, no deadlines appear anywhere in this system — not in OKRs, not in epics, not in story cards. Scope is the unit of planning; time never is.
+
+## The five dependency rules
+
+Dependencies between stories are **structured out at planning time, not managed at run time**:
+
+1. **Contracts before code (Wave 0).** One serial pass defines shared types, API schemas, database tables, and function signatures before any parallel work starts. Frozen for the wave — parallel agents consume contracts, they never negotiate with each other.
+2. **File ownership IS the dependency graph.** Two stories can run in parallel exactly when their file lists don't intersect. If a file is genuinely needed by more than one story, either merge those stories into one, or push the shared part into Wave 0 as a contract.
+3. **Vertical slices over horizontal layers.** Split work by feature — each story goes database → API → UI for its own feature — never split one feature into a backend story and a frontend story.
+4. **Epics are the sync points.** Wave 0 (contracts, serial) → Wave 1 (all stories, parallel) → Wave 2 (integrate, review, demo, serial). Epics themselves run one at a time; each epic ends fully integrated and demoable before the next epic is planned.
+5. **Every story self-verifies.** Each story's own agent runs its acceptance check before reporting done. Wave 2 additionally runs the epic-level check. Nothing merges on "it should work."
+
+The collision check at the start of a wave enforces rule 2 mechanically: any two story cards claiming the same file refuse to launch, and slicing gets revisited before anything runs. This is deliberate — a file collision caught before dispatch costs nothing; the same collision discovered mid-wave, after two agents have both edited the same file, costs a redo.
+
+Notice what these five rules add up to: none of them ask an agent to coordinate with another agent at run time. Coordination is a planning-time cost, paid once by whoever slices the epic — never a run-time cost paid by workers negotiating over a shared file or a half-defined interface.
+
+## Model & cost policy
+
+**Principle: spend at planning time, save at run time.** Planning happens once per epic; execution is many parallel agents plus retries. Every ambiguity resolved once during planning by a capable model is paid for once — instead of paid for repeatedly by confused cheap workers hitting the same wall. So planning has no cost ceiling worth protecting: ask every intake question, push back on every vague Key Result, over-specify every story card. Execution stays cheap, and it stays cheap *because* planning was thorough.
+
+| Phase | Tier | Why |
+|---|---|---|
+| Intake, OKRs, epic slicing | smart tier | Judgment-heavy, happens once per epic. |
+| Wave 0 (contracts) | smart tier | Contract errors cascade into every parallel story that follows. |
+| Wave 1 (story workers) | cheap tier | The bulk of tokens spent. Story cards are designed so a cheap-tier agent succeeds without judgment calls. |
+| Wave 2 (integrate, verify, demo brief) | smart tier | Cross-story judgment; catches what cheap-tier workers missed. |
+
+Concrete model names per tier are configured once in `playbooks/templates/CONFIG.md` — this playbook only names the tiers, never a specific model.
+
+**The worker-readiness test — the actual cost lever:** a story card is done only if a cheap-tier agent can complete it from the card plus `CONTRACTS.md` alone — exact file paths, exact commands, expected outputs, zero exploring, zero inferring intent. If a card seems to need smart-tier judgment to complete, **the card is wrong, not the model**: sharpen it, split it, or move the decision into the Wave 0 contracts instead. This test is applied at slicing time, before any worker agent is dispatched — never discovered mid-wave.
+
+**Retries are the hidden cost.** Self-verifying stories, plus turning review feedback into new acceptance checks on redo, exist precisely to keep retry loops short: a redo re-runs cheap-tier workers against sharpened checks, never an open-ended smart-tier debugging session.
+
+Put together, the two failure modes this policy guards against are opposite ends of the same mistake: under-specifying a card so a cheap-tier worker flails and burns retries, or routing everything to the smart tier out of caution and paying full price for work that never needed judgment. The worker-readiness test is the single check that catches both — it's applied once, at slicing time, and it's cheaper to apply than either mistake is to recover from.
+
+## The review gate
+
+Every sprint close produces a **demo brief** — a required artifact, not a status update. Use `playbooks/templates/DEMO.md`. It must contain:
+
+- what was built
+- **how to test it** — exact steps, URL, or command
+- **what to look for** — what "working" looks like, and which edge cases to poke
+
+The gate has exactly three exits:
+
+- **Approve** → learnings get written to `LEARNINGS.md`, the roadmap flips, the next epic gets planned.
+- **Redo** → the reviewer's tips become new acceptance checks on the affected story cards, and the same epic re-runs its wave against the sharpened checks. Feedback becomes testable this way — a redo can never miss the same point twice.
+- **Replan** → the epic goes back to slicing, and the roadmap after it gets re-examined, since a replan usually invalidates assumptions later epics were built on.
+
+The demo brief exists because "looks about right" is not a review — it's a guess dressed up as a decision. A brief that names the exact command to run and the exact thing to look for turns the gate into a real check, and it's what makes Approve/Redo/Replan a decision instead of a mood.
+
+## Fail-fast structure
+
+**Epic 1 is always the walking skeleton** — the thinnest possible end-to-end slice: one trivial action moving all the way through every layer the project needs (for example, UI through API through storage through deploy). It proves the architecture, the deploy path, and the agent workflow itself, while a full replan is still nearly free.
+
+Epics 1 and 2 are, deliberately, where a project is most likely to die — and that's the point: dying there is cheap. A project that survives its walking skeleton and its first real epic has already retired its biggest unknowns.
+
+The cost asymmetry is the whole argument: a walking skeleton that reveals a broken assumption costs one small epic and a replan. The same broken assumption discovered after ten epics of feature work costs ten epics of rework built on a foundation that never held. Fail-fast structure is what makes the cheap failure the one that actually happens.
+
+## Per-project output format
+
+A project's planning output is a single doc that stays in this shape:
+
+1. **OKRs** — objective plus its Key Results.
+2. **Initiatives** — the 1–3 big bets that move those Key Results.
+3. **An ordered epic list** — riskiest first, each epic carrying its one-sentence demo definition of done.
+4. **A full story breakdown for the current epic only** — waves and file ownership, using `playbooks/templates/STORY.md` per card.
+
+Every future epic beyond the current one stays a single line in the roadmap. It only gets expanded into stories when the project reaches it — because every earlier epic that ships changes what the plan after it should look like. Detailing epics further out than the current one is wasted planning spend: it will be re-planned anyway once assumptions shift.
