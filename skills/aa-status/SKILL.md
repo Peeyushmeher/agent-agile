@@ -1,6 +1,9 @@
 ---
 name: aa-status
 description: Use when the user asks for status, progress, an overview, "where are we", a roadmap summary, or Key Result progress on an Agent-Agile project, for example "/aa-status", "how's this project going", "what's left to do".
+license: MIT
+metadata:
+  system: agent-agile
 ---
 
 # aa-status

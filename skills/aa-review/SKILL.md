@@ -1,6 +1,9 @@
 ---
 name: aa-review
 description: Use when the user wants to review a finished epic's demo, decide whether to approve, redo, or replan an epic, or invokes the review gate, for example "/aa-review", "let's review this epic", "walk me through the demo", "I want to give feedback on this epic".
+license: MIT
+metadata:
+  system: agent-agile
 ---
 
 # aa-review

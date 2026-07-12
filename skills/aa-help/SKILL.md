@@ -1,6 +1,9 @@
 ---
 name: aa-help
 description: Use when the user asks what Agent-Agile commands exist, wants a command reference or cheat sheet, is unsure which command to run next, or asks how the methodology works, for example "/aa-help", "what commands are there", "how does this system work".
+license: MIT
+metadata:
+  system: agent-agile
 ---
 
 # aa-help

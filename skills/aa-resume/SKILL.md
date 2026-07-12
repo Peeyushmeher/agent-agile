@@ -1,6 +1,9 @@
 ---
 name: aa-resume
 description: Use when the user says resume, continue, or pick up where we left off, starts a new session on an existing Agent-Agile project, or is recovering after a crash or context reset, for example "/aa-resume", "let's continue", "where were we".
+license: MIT
+metadata:
+  system: agent-agile
 ---
 
 # aa-resume

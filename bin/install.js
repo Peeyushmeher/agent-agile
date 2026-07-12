@@ -20,6 +20,9 @@ const root = destFlag !== -1 ? args[destFlag + 1]
     ? (local ? join(process.cwd(), '.agents') : join(homedir(), '.agents'))
     : (local ? join(process.cwd(), '.claude') : join(homedir(), '.claude'));
 
+if (destFlag === -1 && has('--codex') && local)
+  console.warn('warning: local codex installs (./.agents) are outside the playbook resolution rule\'s search paths - agents may not find playbooks. Prefer --codex without --local, or --dest.');
+
 const jobs = [];
 for (const skill of readdirSync(join(src, 'skills')))
   jobs.push([join(src, 'skills', skill), join(root, 'skills', skill)]);
