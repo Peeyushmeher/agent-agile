@@ -117,7 +117,7 @@ Write `.planning/PROJECT.md` from the template at `playbooks/templates/PROJECT.m
 **Rules while drafting:**
 
 1. Every Key Result passes the three tests from Pushback patterns above.
-2. **Initiative kill-filter:** every epic must serve an initiative — "does this epic move a Key Result? No → cut it."
+2. **Initiative kill-filter:** every epic must serve an initiative — "does this epic serve an initiative? No → cut."
 3. **Epic 1 is always the walking skeleton** — the thinnest possible end-to-end slice. The riskiest unknown from intake question 6 lands in Epic 1 or 2: the plan should be most likely to die here, while it's still cheap.
 4. Every epic's Definition of Done is a demo sentence: "I can do X and see Y." A demo sentence proves user value, not plumbing — "I can see the API returns 200" is plumbing, not a demo.
 5. Detail the current epic only; every future epic stays a single line in the roadmap until it's the current epic.
