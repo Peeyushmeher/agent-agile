@@ -47,7 +47,7 @@ Dispatch one fresh-context smart-tier subagent as integrator. Its job:
 - Concatenate every `stories/SN.report.md` into `REPORTS.md`.
 - Wire the cross-story seams the individual workers couldn't see — the places where two stories' outputs need to connect.
 - Run the epic-level acceptance check: the demo sentence, exercised for real (the actual command or flow it describes, not a re-statement of the story-level checks).
-- Write `DEMO.md` (template: `playbooks/templates/DEMO.md`) and `LEARNINGS.md` (template: `playbooks/templates/LEARNINGS.md`).
+- Write `DEMO.md` (template: `playbooks/templates/DEMO.md`) and `LEARNINGS.md` (template: `playbooks/templates/LEARNINGS.md`). If `STATE.md` records panel-refresh FLAGs for this epic (see `critics.md` "Panel refresh"), copy them into `DEMO.md`'s "what to look for" section so the review gate judges them.
 - Flip the epic's row in `ROADMAP.md` to reflect its new status.
 - Update `STATE.md` to point at wherever the epic now sits (verification next, or done).
 

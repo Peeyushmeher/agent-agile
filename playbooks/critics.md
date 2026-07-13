@@ -6,11 +6,27 @@ The panel exists because a plan that reads well to the person who wrote it is no
 ## Panel protocol
 
 - Critics run as **parallel subagents, fresh context, smart tier**. They do not talk to each other and do not see each other's findings.
-- Each critic receives exactly two inputs: its own playbook section (this file, one heading) verbatim, and the full draft plan (PROJECT.md, ROADMAP.md, the current epic's story cards, and draft CONTRACTS.md if it exists). Nothing else — no prior conversation, no other critics' output.
+- Each critic receives exactly two inputs: its own playbook section (this file, one heading) verbatim, and the full draft plan (PROJECT.md, ROADMAP.md, the current epic's story cards, and draft CONTRACTS.md if it exists). Nothing else — no prior conversation, no other critics' output. One exception: the spec auditor additionally receives `.planning/RESEARCH.md` when it exists, because its risk-register hunt audits the plan against that file.
 - **Stance: prosecutor, not reviewer.** A critic's mission is to attack the plan, not improve it. Critics never rewrite a story card, a KR, or a contract — they report what's wrong and where, and hand the fix back to the planner.
 - Every finding carries a **severity**: `BLOCK` (the plan fails without this fix — the planner must resolve it before anything runs) or `FLAG` (a risk worth a human's judgment call, not an automatic stop).
-- **Gate:** the panel runs for multi-epic projects only. A single-epic throwaway skips the panel entirely — this is the anti-ceremony fast path, not an oversight.
+- **Gate — scaled to roadmap size:**
+
+  | Roadmap size | Panel behavior |
+  |---|---|
+  | 1 epic | Skip entirely — the anti-ceremony fast path, not an oversight. |
+  | 2–4 epics | One full pass at plan time. |
+  | 5+ epics | Full pass at plan time, **plus a panel refresh** (below) at every third slicing thereafter. |
+
 - **After the panel:** the planner fixes every BLOCK. Only the critic(s) whose findings forced a structural change get re-run, and only once. The user (or, in an unattended run, the verifier standing in for the user) gates on the remaining FLAGs.
+
+### Panel refresh
+
+On a 5+ epic roadmap, the plan-time panel judged Epic 1's cards; the epics sliced long after it run on nothing but the planner's self-review. The worker-readiness test still applies to every card in every epic — but it is administered by the same planner context that wrote the cards. The refresh is the fresh-eyes version of that check, plus the wave-safety audit (undeclared shared files, ordering, environment feasibility) that no always-on check performs at slicing time.
+
+- **When:** at slicing time for the epic in the 4th, 7th, 10th … roadmap position — position meaning current row order in `ROADMAP.md` at the moment of slicing, re-derived every time, never stored. A replan that reorders rows just recomputes.
+- **Who:** spec auditor + execution auditor only, fresh subagents, standard inputs (their own sections verbatim plus the full draft plan — PROJECT.md, ROADMAP.md, the epic's fresh story cards, CONTRACTS draft if it exists). The saving over a full pass is critic count, not context size. Product and market critics do not re-run: product rot is the Replan path's job, not the refresh's — but the slicer performs one cheap drift tripwire itself: re-read PROJECT.md's KRs against the accumulated LEARNINGS.md, and raise a FLAG recommending replan if learnings contradict a KR or the demo target.
+- **Findings:** BLOCKs are fixed by the planner inline, exactly like the main pass, with the affected critic re-run once. A BLOCK still standing after that is a stop: in an autopilot run, halt the loop and record it in `STATE.md` exactly as a circuit breaker would — never slice onward on a known-broken plan. FLAGs go to the user before Wave 0 in an interactive run; in checkpoint or full-auto, they are recorded in `STATE.md`, and Wave 2's integrator copies them into the epic's `DEMO.md` "what to look for" section — so the review gate that already exists judges them.
+- **Cost:** refresh epics read `CONFIG.md` for the smart tier in addition to the three-file rule's usual set — a deliberate, narrow exception. The refresh trades a slice of flat planning cost on every third epic for card and wave quality on long runs; that trade is the point, not an accident.
 
 ## Product critic
 
@@ -56,6 +72,8 @@ Story cards live at `.planning/epics/EPIC-NN/stories/S*.md`, one file per story,
 **Acceptance-check audit:** every check must be a runnable command with an expected output, and it must actually fail on a trivially wrong implementation. A check that returns success from an empty handler (a bare 200 with no body assertion, for example) passes trivially — demand the check assert on the actual content, not just that something responded.
 
 **Prereq hunt:** scan every story card for external services, keys, subscriptions, accounts, domains, OAuth registrations, or hardware — anything only a human can provide — and cross-check each one against PREREQS.md. PREREQS.md tracks each item's status as `pending`, `done`, or `verified`. Any external dependency named in a story card but missing from PREREQS.md is a **BLOCK** — no exceptions, this is the check that stops a worker from hitting a missing API key mid-run.
+
+**Risk-register hunt:** when `.planning/RESEARCH.md` exists, audit the plan against its risk register. Every row ranked `fixture` must be visible in the plan: if its target epic is the current one, a fixture story must exist for it; if its target epic is a future one, that epic's `ROADMAP.md` line must carry the `[fixture: …]` tag. A `fixture` row with no story (current epic) or no tag (future epic) is a **BLOCK** — a risk the research paid to find and the plan then ignored. Fixture cards also get the acceptance-check audit with an extra tooth: the card must name the wrong behavior its check fails on — a fixture whose check would pass against a naive implementation pins nothing, and that is a BLOCK too.
 
 ## Execution auditor
 
