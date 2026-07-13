@@ -4,8 +4,20 @@ import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+const BANNER = [
+  '    _    ____ _____ _   _ _____      _    ____ ___ _     _____ ',
+  '   / \\  / ___| ____| \\ | |_   _|    / \\  / ___|_ _| |   | ____|',
+  '  / _ \\| |  _|  _| |  \\| | | |     / _ \\| |  _ | || |   |  _|  ',
+  ' / ___ \\ |_| | |___| |\\  | | |    / ___ \\ |_| || || |___| |___ ',
+  '/_/   \\_\\____|_____|_| \\_| |_|   /_/   \\_\\____|___|_____|_____|',
+  '',
+  "  decide if it's the right thing - then build it right, cheaper",
+  ''
+].join('\n');
+
 const src = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
+console.log(BANNER);
 const has = f => args.includes(f);
 const destFlag = args.indexOf('--dest');
 

@@ -1,5 +1,13 @@
 # Agent-Agile
 
+```
+    _    ____ _____ _   _ _____      _    ____ ___ _     _____
+   / \  / ___| ____| \ | |_   _|    / \  / ___|_ _| |   | ____|
+  / _ \| |  _|  _| |  \| | | |     / _ \| |  _ | || |   |  _|
+ / ___ \ |_| | |___| |\  | | |    / ___ \ |_| || || |___| |___
+/_/   \_\____|_____|_| \_| |_|   /_/   \_\____|___|_____|_____|
+```
+
 *Every other system helps agents build the thing right. Agent-Agile decides if it's the right thing — then builds it right, cheaper.*
 
 An open-source planning + execution system for AI coding agents, installable in Claude Code, Codex CLI, and OpenCode. Bring **a rough idea in one sentence** — no PRD required.
@@ -24,7 +32,7 @@ That expense is deliberate and one-time. Planning gets the smart model because e
 
 | Harness | Mechanism | Install |
 |---|---|---|
-| Claude Code | native plugin | `/plugin marketplace add PLACEHOLDER_GITHUB_HANDLE/agent-agile` → `/plugin install agent-agile` |
+| Claude Code | native plugin | `/plugin marketplace add Peeyushmeher/agent-agile` → `/plugin install agent-agile` |
 | Codex CLI | native skills + generated `.codex-plugin/plugin.json` (also falls back to reading `.claude-plugin/`) | drop into `~/.agents/skills` or `codex plugin marketplace add` |
 | OpenCode | scans `.claude/skills/` and `.agents/skills/` natively; frontmatter is already the common subset | `npx agent-agile` or manual copy |
 | Anyone else | copier script | `npx agent-agile --claude --codex --opencode --global/--local` |
