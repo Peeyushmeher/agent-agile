@@ -10,6 +10,8 @@ Read this playbook when running `/aa-execute-epic` or `/aa-autopilot`, or when r
 
 Before any story is built, dispatch one fresh-context smart-tier subagent to write `CONTRACTS.md` for the epic: shared types, API schemas, data schema, function/module signatures, and naming/error-handling conventions. Source it from every story card's `Contracts consumed` field — the contract must cover everything the stories will need to agree on without talking to each other.
 
+Every data-store invariant in the contract must say who owns it: either readers may assume it holds (the writer guarantees it), or readers must tolerate violations of it (defense in depth). An invariant nobody is assigned to is how two stories each assume the other one enforces it — a writer that never dedupes feeding a reader that assumes uniqueness is a bug neither story's acceptance check will catch.
+
 Contract errors cascade into every worker that consumes them, so this step gets the strongest tier available, even though it is the smallest amount of work in the epic.
 
 Once written, `CONTRACTS.md` is **frozen** for the rest of the wave. Story workers consume it; they do not negotiate it, extend it, or file change requests against it mid-wave. If a worker discovers the contract is wrong, that surfaces in its report and gets handled at Wave 2 or in a redo — never by a worker unilaterally editing `CONTRACTS.md`.

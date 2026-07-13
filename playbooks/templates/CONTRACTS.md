@@ -8,7 +8,7 @@
 <method, path, request shape, response shape, for every endpoint a story will call or implement>
 
 ## Data schema
-<tables/collections, fields, types, relationships>
+<tables/collections, fields, types, relationships — and each store's invariants (uniqueness, ordering, case rules), each one stating explicitly whether readers may assume it holds or must tolerate violations of it>
 
 ## Interfaces/signatures
 <function and module signatures stories are expected to implement or call>
