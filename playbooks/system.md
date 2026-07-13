@@ -127,7 +127,7 @@ Every sprint close produces a **demo brief** — a required artifact, not a stat
 The gate has exactly three exits:
 
 - **Approve** → learnings get written to `LEARNINGS.md`, the roadmap flips, the next epic gets planned.
-- **Redo** → the reviewer's tips become new acceptance checks on the affected story cards, and the same epic re-runs its wave against the sharpened checks. Feedback becomes testable this way — a redo can never miss the same point twice.
+- **Redo** → the reviewer's tips become new acceptance checks on the affected story cards, and the same epic re-runs its wave against the sharpened checks. Feedback becomes testable this way — a redo can never miss the same point twice. A patch-sized redo-list takes the scoped path in `execution.md` instead: one cheap-tier fix worker plus re-verification, no full wave re-run.
 - **Replan** → the epic goes back to slicing, and the roadmap after it gets re-examined, since a replan usually invalidates assumptions later epics were built on.
 
 The demo brief exists because "looks about right" is not a review — it's a guess dressed up as a decision. A brief that names the exact command to run and the exact thing to look for turns the gate into a real check, and it's what makes Approve/Redo/Replan a decision instead of a mood.

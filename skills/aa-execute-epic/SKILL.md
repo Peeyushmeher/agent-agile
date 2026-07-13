@@ -25,7 +25,7 @@ This skill stays lean: it dispatches subagents and collects their output. It nev
 5. **Verification.** Spawn a fresh `aa-verifier` subagent with the model configured for the smart tier in `.planning/CONFIG.md` — someone who wrote none of the epic's code. It checks whether the demo sentence is actually true, re-runs acceptance checks rather than trusting the reports, pokes the edge cases in `DEMO.md`'s "what to look for" section, and returns a plain verdict: pass, or a redo-list of specific findings.
 6. **The review gate.** Present `DEMO.md` and the verifier's verdict at the gate, per the mode set in `.planning/CONFIG.md`'s `gate` field (interactive/checkpoint/full-auto — see `playbooks/execution.md` "Autopilot" for what each mode means for who reads the gate). The gate has exactly three outcomes:
    - **Approve** — the epic is done.
-   - **Redo** — convert every tip and finding into a new, concrete acceptance check on the specific story or stories it affects, re-run Wave 1 for those stories and Wave 2 to re-integrate, then verify again.
+   - **Redo** — convert every tip and finding into a new, concrete acceptance check on the specific story or stories it affects, re-run Wave 1 for those stories and Wave 2 to re-integrate, then verify again. If the redo-list qualifies for the scoped redo in `playbooks/execution.md` "The review gate" (every finding file-specific, all files owned by one story, contracts untouched), take that path instead: one cheap-tier fix worker plus re-verification, no wave re-run — one scoped attempt only, then escalate to the full redo.
    - **Replan** — send the epic back to slicing entirely; the roadmap after it gets re-examined.
 
 ## Hard rules

@@ -27,7 +27,7 @@ Read `playbooks/execution.md` sections "Autopilot", "Circuit breakers", and "Res
    - On approve, the integrator has already written `LEARNINGS.md` and flipped the `ROADMAP.md` row (per Wave 2); move to the next pending epic.
    - On redo or replan, follow "The review gate" in `playbooks/execution.md`, then resume the loop from that epic once it re-verifies.
 4. **Circuit breakers.** Follow the three circuit breakers in `playbooks/execution.md` "Circuit breakers" exactly as written — never push through or work around one:
-   - An epic fails verification twice in a row, even after a redo — stop the autopilot loop entirely.
+   - An epic fails verification even after its full redo — stop the autopilot loop entirely. The most an epic ever gets is: fail → scoped redo (if eligible) → fail → full redo → fail → stop.
    - A prerequisite goes missing mid-run — stop immediately, reset its `PREREQS.md` status to `pending`, and notify whoever needs to resupply it.
    - Never fake a credential and never silently mock a missing paid service.
 5. **Stopping.** Whenever the loop stops — a circuit breaker, an interactive gate, the end of the roadmap, or a context reset — update `.planning/STATE.md` per "Resume protocol": what's in progress, what's next, the pointers the next session needs (at most three files), and the blocker if there is one. `STATE.md` must say exactly where the run stopped and why; the next session reads only this file to resume.
