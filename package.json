@@ -4,7 +4,11 @@
   "description": "Agile planning + execution system for AI coding agents. Grill the idea, plan with OKRs, attack the plan with critics, execute in parallel waves.",
   "type": "module",
   "bin": { "agent-agile": "bin/install.js" },
-  "scripts": { "test": "node --test tests/" },
+  "files": ["bin", "skills", "agents", "playbooks", "scripts", "AGENTS.md", ".claude-plugin", ".codex-plugin"],
+  "repository": { "type": "git", "url": "git+https://github.com/Peeyushmeher/agent-agile.git" },
+  "homepage": "https://github.com/Peeyushmeher/agent-agile#readme",
+  "bugs": { "url": "https://github.com/Peeyushmeher/agent-agile/issues" },
+  "scripts": { "test": "node --test \"tests/*.test.js\"" },
   "keywords": ["claude-code", "codex", "opencode", "skills", "agents", "agile", "okr", "planning"],
   "author": "Peeyush Yerremsetty",
   "license": "MIT"
