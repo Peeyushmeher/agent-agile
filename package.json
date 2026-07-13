@@ -1,6 +1,6 @@
 {
   "name": "agent-agile",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Agile planning + execution system for AI coding agents. Grill the idea, plan with OKRs, attack the plan with critics, execute in parallel waves.",
   "type": "module",
   "bin": {
