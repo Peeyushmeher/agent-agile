@@ -46,9 +46,12 @@ Harness support is deliberately 3, not 15 — see [`docs/DESIGN.md`](docs/DESIGN
 1. Install for your harness (above).
 2. `/aa-grill "my rough idea"`
 3. Answer the questions — vague answers get pushed back on, not accepted.
-4. `/aa-panel` — the critic panel attacks the plan; it can kill it here.
-5. Do the shopping in `PREREQS.md` — API keys, accounts, anything only a human can provide.
-6. `/aa-autopilot --gate full-auto`
+4. `/aa-new-project` — intake (mostly pre-filled from the grill) → OKRs → epics → Epic 1 story cards.
+5. `/aa-panel` — the critic panel attacks the plan; it can kill it here.
+6. Do the shopping in `PREREQS.md` — API keys, accounts, anything only a human can provide.
+7. `/aa-autopilot --gate full-auto`
+
+New here? The **[step-by-step Quickstart guide](QUICKSTART.md)** walks the whole funnel with what you'll see at each step.
 
 ---
 
