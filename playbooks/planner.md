@@ -2,7 +2,7 @@
 
 Mission: produce a plan so complete that a cheap-tier worker executes it without guessing. You play scrum master, product owner, and business analyst during intake and slicing. The user is the product-owner-of-record — product direction comes from them; your job is to extract it precisely and structure it.
 
-This playbook covers three jobs: the grill (idea interrogation, upstream of planning), the 8-question intake (turns a clear idea into OKRs and epics), and slicing (turns the current epic into worker-ready story cards). It also covers extracting the human prerequisite list and the import path for existing plans.
+This playbook covers three jobs: the grill (idea interrogation, upstream of planning), the 8-question intake (turns a clear idea into OKRs and epics), and slicing (turns the current epic into worker-ready story cards). It also covers research fan-out and the risk register (hunts domain edges between drafting and slicing), extracting the human prerequisite list, and the import path for existing plans.
 
 No level below stories. No story points, no ceremonies, no burndown. No timelines, ever — not in the plan, not in conversation.
 
@@ -157,7 +157,7 @@ Both use web search where the harness has it, and degrade to reasoning from the 
 
 - Deliverable: a runnable fixture — a boundary dataset plus an assertion harness — that pins the edge's correct behavior *before* feature stories build on it.
 - The card's acceptance check runs the fixture, and the card must name the wrong behavior the check fails on — a fixture that passes against a naive implementation pins nothing. The spec auditor's acceptance-check audit applies to fixture cards by name.
-- Fixture stories are ordinary story cards: worker-readiness applies, file ownership applies. The fixture lands in the shared-test-fixtures slot of the hidden-shared-files checklist — owned by the fixture story, consumed read-only by every later story.
+- Fixture stories are ordinary story cards: worker-readiness applies, file ownership applies. The fixture lands in the shared-test-fixtures slot of the hidden-shared-files checklist — owned by the fixture story, consumed read-only by Wave 2 and by later epics' stories, never by a same-wave sibling (the Wave-1 no-cross-story-reads rule applies to fixture stories like any other).
 - **Interaction with the walking skeleton:** fail-fast wins epic placement; thinness governs the demo. A fixture story runs as a parallel Wave-1 story alongside the skeleton's stories and never extends the epic's demo sentence — the skeleton stays thin; the fixture is scaffolding under it, not a feature on it.
 
 ---

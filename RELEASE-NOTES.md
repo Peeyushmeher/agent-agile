@@ -2,6 +2,13 @@
 
 Newest first. Each entry says *why* the release exists, not just what changed.
 
+## Unreleased
+
+The two planning upgrades the stress test argued for — closing the dimension the competitor won.
+
+- **Research fan-out + risk fixtures** — multi-epic roadmaps now dispatch two parallel smart-tier researchers (domain edges, ecosystem prior art) after the first roadmap draft, producing a `RESEARCH.md` risk register. Risks ranked `fixture` tag their target epic on the roadmap and become fixture stories — a boundary dataset plus assertion harness, pinned before feature stories build on the edge. The spec auditor enforces it: an ignored fixture row is a BLOCK.
+- **Panel-pass scaling** — the critic-panel gate now scales with roadmap size: 1 epic skips, 2–4 get one full pass, 5+ add a spec+execution panel refresh at every third slicing, so long autopilot runs don't coast on a review of Epic 1's cards. Bounded, position-derived, no stored state.
+
 ## 0.1.2
 
 Stress-test hardening. Why it exists: v0.1.0 was benchmarked head-to-head against two other planning systems on the same project the day it shipped; this release fixes what the test surfaced.

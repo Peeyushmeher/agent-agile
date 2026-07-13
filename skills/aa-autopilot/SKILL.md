@@ -26,7 +26,7 @@ Read `playbooks/execution.md` sections "Autopilot", "Circuit breakers", and "Res
      - **Interactive** — stop and present `DEMO.md` and the verifier's verdict to the user at this epic, exactly as a standalone `/aa-execute-epic` run would.
    - On approve, the integrator has already written `LEARNINGS.md` and flipped the `ROADMAP.md` row (per Wave 2); move to the next pending epic.
    - On redo or replan, follow "The review gate" in `playbooks/execution.md`, then resume the loop from that epic once it re-verifies.
-4. **Circuit breakers.** Follow the three circuit breakers in `playbooks/execution.md` "Circuit breakers" exactly as written — never push through or work around one:
+4. **Circuit breakers.** Follow the circuit breakers in `playbooks/execution.md` "Circuit breakers" exactly as written — never push through or work around one (a panel-refresh BLOCK left unresolved at slicing time also stops the loop, per `playbooks/critics.md` "Panel refresh"):
    - An epic fails verification even after its full redo — stop the autopilot loop entirely. The most an epic ever gets is: fail → scoped redo (if eligible) → fail → full redo → fail → stop.
    - A prerequisite goes missing mid-run — stop immediately, reset its `PREREQS.md` status to `pending`, and notify whoever needs to resupply it.
    - Never fake a credential and never silently mock a missing paid service.

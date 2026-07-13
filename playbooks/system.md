@@ -71,7 +71,7 @@ Templates for each of these live at `playbooks/templates/<name>.md`.
 
 **Epic to epic (the three-file read rule):** the next epic's planning session reads exactly three things — `PROJECT.md`, `ROADMAP.md`, and the previous epic's `LEARNINGS.md`. Never the whole project history. Learnings are the compressed memory; the codebase itself is the ground truth for everything else. This is what keeps planning context small no matter how many epics have already shipped.
 
-Why this matters in practice: a ten-epic project never needs a session that reads all ten epics' worth of history to plan epic eleven. The three-file rule is the mechanism that makes long projects as cheap to plan late as they were to plan early — without it, planning cost would grow with project size instead of staying flat.
+Why this matters in practice: a ten-epic project never needs a session that reads all ten epics' worth of history to plan epic eleven. The three-file rule is the mechanism that makes long projects as cheap to plan late as they were to plan early — without it, planning cost would grow with project size instead of staying flat. (The one deliberate exception: panel-refresh epics on 5+ epic roadmaps also read `CONFIG.md` — see `critics.md` "Panel refresh".)
 
 ## Sprints are scope-boxes
 
