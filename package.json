@@ -1,15 +1,42 @@
 {
   "name": "agent-agile",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Agile planning + execution system for AI coding agents. Grill the idea, plan with OKRs, attack the plan with critics, execute in parallel waves.",
   "type": "module",
-  "bin": { "agent-agile": "bin/install.js" },
-  "files": ["bin", "skills", "agents", "playbooks", "scripts", "AGENTS.md", ".claude-plugin", ".codex-plugin"],
-  "repository": { "type": "git", "url": "git+https://github.com/Peeyushmeher/agent-agile.git" },
+  "bin": {
+    "agent-agile": "bin/install.js"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "agents",
+    "playbooks",
+    "scripts",
+    "AGENTS.md",
+    ".claude-plugin",
+    ".codex-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Peeyushmeher/agent-agile.git"
+  },
   "homepage": "https://github.com/Peeyushmeher/agent-agile#readme",
-  "bugs": { "url": "https://github.com/Peeyushmeher/agent-agile/issues" },
-  "scripts": { "test": "node --test \"tests/*.test.js\"" },
-  "keywords": ["claude-code", "codex", "opencode", "skills", "agents", "agile", "okr", "planning"],
+  "bugs": {
+    "url": "https://github.com/Peeyushmeher/agent-agile/issues"
+  },
+  "scripts": {
+    "test": "node --test \"tests/*.test.js\""
+  },
+  "keywords": [
+    "claude-code",
+    "codex",
+    "opencode",
+    "skills",
+    "agents",
+    "agile",
+    "okr",
+    "planning"
+  ],
   "author": "Peeyush Yerremsetty",
   "license": "MIT"
 }

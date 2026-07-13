@@ -1,5 +1,14 @@
 {
   "name": "agent-agile",
-  "owner": { "name": "Peeyush Yerremsetty" },
-  "plugins": [{ "name": "agent-agile", "source": "./", "description": "Agile planning + execution for AI coding agents." }]
+  "owner": {
+    "name": "Peeyush Yerremsetty"
+  },
+  "plugins": [
+    {
+      "name": "agent-agile",
+      "source": "./",
+      "description": "Agile planning + execution for AI coding agents.",
+      "version": "0.1.1"
+    }
+  ]
 }
