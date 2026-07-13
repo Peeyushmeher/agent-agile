@@ -8,7 +8,7 @@ metadata:
 
 # aa-review
 
-Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `~/.claude/agent-agile/playbooks`, (4) `~/.agents/agent-agile/playbooks`, (5) `./playbooks`.
+Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `./.agents/agent-agile/playbooks`, (4) `~/.claude/agent-agile/playbooks`, (5) `~/.agents/agent-agile/playbooks`, (6) `./playbooks`.
 
 Read `playbooks/execution.md`'s "The review gate" section from that root, and run the gate exactly as it describes.
 

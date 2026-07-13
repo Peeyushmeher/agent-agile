@@ -8,7 +8,7 @@ metadata:
 
 # aa-new-project
 
-Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `~/.claude/agent-agile/playbooks`, (4) `~/.agents/agent-agile/playbooks`, (5) `./playbooks`.
+Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `./.agents/agent-agile/playbooks`, (4) `~/.claude/agent-agile/playbooks`, (5) `~/.agents/agent-agile/playbooks`, (6) `./playbooks`.
 
 Read `playbooks/planner.md` sections **The 8 intake questions**, **Pushback patterns**, **Drafting the plan**, **Slicing epics into stories**, **The worker-readiness test**, and **Extracting PREREQS**, in full, and follow them exactly — do NOT re-derive or improvise the system.
 

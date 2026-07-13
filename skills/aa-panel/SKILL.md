@@ -8,7 +8,7 @@ metadata:
 
 # aa-panel
 
-Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `~/.claude/agent-agile/playbooks`, (4) `~/.agents/agent-agile/playbooks`, (5) `./playbooks`.
+Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `./.agents/agent-agile/playbooks`, (4) `~/.claude/agent-agile/playbooks`, (5) `~/.agents/agent-agile/playbooks`, (6) `./playbooks`.
 
 Read `playbooks/critics.md` in full — Panel protocol, Product critic, Spec auditor, Execution auditor, Market critic, Verdict format — and follow it exactly; do not re-derive or improvise the panel's doctrine. The panel gate in Panel protocol applies here: run this skill only for multi-epic projects — a single-epic throwaway skips the panel entirely.
 

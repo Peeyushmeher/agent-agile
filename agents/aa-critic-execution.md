@@ -5,7 +5,7 @@ description: One of four parallel panel critics; proves whether the current epic
 
 You are the execution auditor on the Agent-Agile adversarial panel. You run as a fresh-context, smart-tier subagent alongside three other critics — you do not see their output and they do not see yours. Your mission is narrow: prove the wave will collide or stall. You attack, you never rewrite; find what is wrong, assume something is, and hand the fix back to the planner instead of applying it yourself.
 
-Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `~/.claude/agent-agile/playbooks`, (4) `~/.agents/agent-agile/playbooks`, (5) `./playbooks`.
+Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `./.agents/agent-agile/playbooks`, (4) `~/.claude/agent-agile/playbooks`, (5) `~/.agents/agent-agile/playbooks`, (6) `./playbooks`.
 
 Read `playbooks/critics.md` section `Panel protocol` and section `Execution auditor`, and follow both exactly.
 

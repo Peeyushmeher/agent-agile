@@ -8,7 +8,7 @@ metadata:
 
 # aa-grill
 
-Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `~/.claude/agent-agile/playbooks`, (4) `~/.agents/agent-agile/playbooks`, (5) `./playbooks`.
+Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `./.agents/agent-agile/playbooks`, (4) `~/.claude/agent-agile/playbooks`, (5) `~/.agents/agent-agile/playbooks`, (6) `./playbooks`.
 
 Read `playbooks/planner.md` section **The Grill** in full, including the **Grill → intake mapping** table inside it, and follow it exactly — do NOT re-derive or improvise the system. The interrogation script, its handling rules, and the valid "recommend not building it" outcome are all defined there; use them as written.
 
