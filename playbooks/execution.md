@@ -20,7 +20,7 @@ Template: `playbooks/templates/CONTRACTS.md`.
 
 Two checks gate the start of Wave 1. Both must pass before dispatching a single story worker.
 
-**Collision check.** File ownership is the dependency graph for this system — two stories can run in parallel exactly when their `Files it owns` lists don't intersect. Run the collision check: `node scripts/collision-check.js <epic-dir>`. A clean run exits 0 with `{"ok":true}`. A collision exits 1 with a JSON report naming every contested file and the stories that claim it, e.g. `{"ok":false,"collisions":[{"file":"p","stories":["S1.md","S3.md"]}]}`.
+**Collision check.** File ownership is the dependency graph for this system — two stories can run in parallel exactly when their `Files it owns` lists don't intersect. Run the collision check: `node <playbook-root>/../scripts/collision-check.js <epic-dir>` — the script installs next to the playbooks, so resolve `<playbook-root>` with the standard resolution rule first (in a source checkout of this repo that is simply `node scripts/collision-check.js <epic-dir>`). A clean run exits 0 with `{"ok":true}`. A collision exits 1 with a JSON report naming every contested file and the stories that claim it, e.g. `{"ok":false,"collisions":[{"file":"p","stories":["S1.md","S3.md"]}]}`.
 
 Any collision is a full refuse: do not launch Wave 1. Report the exact colliding files and stories back to whoever is slicing the epic, and send the epic back to slicing so the shared file either moves into `CONTRACTS.md` or the stories get merged. Never work around a collision by asking two workers to touch the same file "carefully."
 

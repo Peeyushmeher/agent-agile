@@ -41,6 +41,7 @@ for (const skill of readdirSync(join(src, 'skills')))
 for (const agent of readdirSync(join(src, 'agents')))
   jobs.push([join(src, 'agents', agent), join(root, 'agents', agent)]);
 jobs.push([join(src, 'playbooks'), join(root, 'agent-agile', 'playbooks')]);
+jobs.push([join(src, 'scripts'), join(root, 'agent-agile', 'scripts')]);
 
 for (const [from, to] of jobs) {
   console.log(`${has('--dry-run') ? '[dry-run] ' : ''}${from} -> ${to}`);
