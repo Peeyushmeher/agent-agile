@@ -118,7 +118,7 @@ Write `.planning/PROJECT.md` from the template at `playbooks/templates/PROJECT.m
 
 1. Every Key Result passes the three tests from Pushback patterns above.
 2. **Initiative kill-filter:** every epic must serve an initiative — "does this epic serve an initiative? No → cut."
-3. **Epic 1 is always the walking skeleton** — the thinnest possible end-to-end slice. The riskiest unknown from intake question 6 lands in Epic 1 or 2: the plan should be most likely to die here, while it's still cheap.
+3. **Epic 1 is always the walking skeleton** — the thinnest possible end-to-end slice. The riskiest unknown — intake question 6's answer, or any sharper one the risk register surfaces (see Research fan-out below) — lands in Epic 1 or 2: the plan should be most likely to die here, while it's still cheap.
 4. Every epic's Definition of Done is a demo sentence: "I can do X and see Y." A demo sentence proves user value, not plumbing — "I can see the API returns 200" is plumbing, not a demo.
 5. Detail the current epic only; every future epic stays a single line in the roadmap until it's the current epic.
 
@@ -126,6 +126,39 @@ Write `.planning/PROJECT.md` from the template at `playbooks/templates/PROJECT.m
 
 - **Plausible completeness** — a plan that reads as finished but leaves decisions unstated. Any decision a worker would otherwise face at run time must be made here, by you or by asking the user one question.
 - **Scope drift via enthusiasm** — when new ideas surface mid-intake (yours or the user's), they go to the out-of-scope list or a future epic's one-liner, never into the current epic.
+
+---
+
+## Research fan-out and the risk register
+
+The intake answers capture what the user knows; they cannot capture what the user doesn't know to fear. The worst class of planning failure is the domain edge nobody named — the timezone boundary, the duplicate event, the case-folding rule — discovered by a bug report instead of by the plan. Research fan-out hunts those edges before any story card is written.
+
+**When it runs.** After the first `ROADMAP.md` draft, before slicing — the draft is the gate's fact on disk: a single-epic throwaway skips research entirely (the same anti-ceremony fast path as the panel). A multi-epic roadmap runs it once, then revises the draft against what comes back. **Off-ramp:** if the project touches none of the canonical hard domains — time and dates, money, concurrency, external data sync, user-generated text, offline/retry behavior — skip the fan-out and record the skip and its reasoning as a Key Decision in `PROJECT.md`, so the absence of research reads as a decision, not an omission.
+
+**Who runs.** Two parallel fresh smart-tier subagents (research happens once per project; the spend-at-planning-time principle applies):
+
+- **`aa-researcher-domain`** — mission: what makes this domain deceptively hard? Boundary conditions and canonical failure modes, each with a concrete example of how it bites and how existing products handle it. Intake question 6 is its seed, not its ceiling — question 6 is what the user fears; this researcher hunts what the user doesn't know to fear.
+- **`aa-researcher-ecosystem`** — mission: prior art. Libraries and patterns that already solve the hard parts, what not to hand-roll, and the maintenance and license status of every candidate. Feeds Key Decisions in `PROJECT.md`.
+
+Both use web search where the harness has it, and degrade to reasoning from the plan alone — explicitly flagging every claim they could not verify — where it doesn't.
+
+**Output: `.planning/RESEARCH.md`**, written by the planner from `playbooks/templates/RESEARCH.md` — a synthesis, never a raw researcher dump. Its load-bearing part is the **risk register**: every surfaced risk, ranked either
+
+- `fixture` — the edge must be pinned by a runnable fixture before any feature story builds on it, or
+- `note` — a drafting consideration, handled by card wording or contracts.
+
+**Revising the draft against the register:**
+
+1. Every `fixture` row names its target epic: **the earliest epic whose demo-visible behavior would silently return a wrong answer if the edge weren't pinned.** "Touches" means exactly that — not "any epic whose data could someday hit the edge." Worked example: a habit tracker's streak count is wrong the day a daylight-saving boundary crosses a log date, so the date-boundary fixture belongs to the first epic that computes a streak — not to a later polish epic, and not to every epic that merely stores a date.
+2. Copy each `fixture` row's tag onto its target epic's one-line entry in `ROADMAP.md` (e.g. `…shows me streaks [fixture: DST boundary]`). This is what makes the register durable: slicing sessions read `ROADMAP.md` under the three-file rule, so the tag reaches every future epic without adding a fourth file.
+3. Re-examine the Epic 1/2 riskiest-first assignment — the register may name a sharper riskiest-unknown than intake question 6 did.
+
+**Fixture stories.** At slicing time, every `[fixture: …]` tag on the epic becomes one fixture story:
+
+- Deliverable: a runnable fixture — a boundary dataset plus an assertion harness — that pins the edge's correct behavior *before* feature stories build on it.
+- The card's acceptance check runs the fixture, and the card must name the wrong behavior the check fails on — a fixture that passes against a naive implementation pins nothing. The spec auditor's acceptance-check audit applies to fixture cards by name.
+- Fixture stories are ordinary story cards: worker-readiness applies, file ownership applies. The fixture lands in the shared-test-fixtures slot of the hidden-shared-files checklist — owned by the fixture story, consumed read-only by every later story.
+- **Interaction with the walking skeleton:** fail-fast wins epic placement; thinness governs the demo. A fixture story runs as a parallel Wave-1 story alongside the skeleton's stories and never extends the epic's demo sentence — the skeleton stays thin; the fixture is scaffolding under it, not a feature on it.
 
 ---
 

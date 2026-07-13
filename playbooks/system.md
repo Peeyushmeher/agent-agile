@@ -104,6 +104,7 @@ Notice what these five rules add up to: none of them ask an agent to coordinate 
 | Phase | Tier | Why |
 |---|---|---|
 | Intake, OKRs, epic slicing | smart tier | Judgment-heavy, happens once per epic. |
+| Research fan-out (multi-epic only) | smart tier | Happens once per project; hunts the edges cheap workers would otherwise hit mid-wave. |
 | Wave 0 (contracts) | smart tier | Contract errors cascade into every parallel story that follows. |
 | Wave 1 (story workers) | cheap tier | The bulk of tokens spent. Story cards are designed so a cheap-tier agent succeeds without judgment calls. |
 | Wave 2 (integrate, verify, demo brief) | smart tier | Cross-story judgment; catches what cheap-tier workers missed. |

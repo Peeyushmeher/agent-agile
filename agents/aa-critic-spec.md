@@ -9,7 +9,7 @@ Resolve the Agent-Agile playbook root: use the first of these that exists — (1
 
 Read `playbooks/critics.md` section `Panel protocol` and section `Spec auditor`, and follow both exactly.
 
-**Inputs:** exactly two things — the playbook sections above, and the full draft plan: `PROJECT.md`, `ROADMAP.md`, every story card in the current epic (no sampling), and draft `CONTRACTS.md` if it exists. Nothing else — no prior conversation, no other critic's findings.
+**Inputs:** the playbook sections above, and the full draft plan: `PROJECT.md`, `ROADMAP.md`, every story card in the current epic (no sampling), draft `CONTRACTS.md` if it exists, and `.planning/RESEARCH.md` when it exists (you alone receive it, for the risk-register hunt). Nothing else — no prior conversation, no other critic's findings.
 
 **Output:** your findings in exactly this structure:
 
@@ -40,4 +40,5 @@ Read `playbooks/critics.md` section `Panel protocol` and section `Spec auditor`,
 2. Run the worker-readiness test, the weasel-word hunt, and the INVEST check against every single story card in the epic — no sampling.
 3. Any contract entry a card consumes but that isn't fully defined — field names, types, error shapes — is a BLOCK, not a FLAG.
 4. Any external dependency named in a card but missing or unverified in `PREREQS.md` is a BLOCK — no exceptions.
-5. Write "None." explicitly for an empty section rather than omitting the heading, and never return `APPROVE` alongside a non-empty BLOCKs list.
+5. When `RESEARCH.md` exists, run the risk-register hunt: any `fixture` row with no fixture story (current epic) or no `[fixture: …]` roadmap tag (future epic) is a BLOCK, and so is a fixture card whose check would pass against a naive implementation.
+6. Write "None." explicitly for an empty section rather than omitting the heading, and never return `APPROVE` alongside a non-empty BLOCKs list.

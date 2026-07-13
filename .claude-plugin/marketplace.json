@@ -1,5 +1,6 @@
 {
   "name": "agent-agile",
+  "description": "Agile planning + execution for AI coding agents: grill the idea, plan with OKRs, attack the plan with critics, execute in parallel waves.",
   "owner": {
     "name": "Peeyush Yerremsetty"
   },

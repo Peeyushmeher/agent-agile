@@ -14,7 +14,7 @@ Read `playbooks/critics.md` in full — Panel protocol, Product critic, Spec aud
 
 ## Wiring
 
-1. Read the draft plan: `.planning/PROJECT.md`, `.planning/ROADMAP.md`, the current epic's story cards at `.planning/epics/EPIC-NN/stories/S*.md`, and `.planning/epics/EPIC-NN/CONTRACTS.md` if it exists.
+1. Read the draft plan: `.planning/PROJECT.md`, `.planning/ROADMAP.md`, the current epic's story cards at `.planning/epics/EPIC-NN/stories/S*.md`, `.planning/epics/EPIC-NN/CONTRACTS.md` if it exists, and `.planning/RESEARCH.md` if it exists (per Panel protocol, the spec auditor alone receives it).
 2. Read `.planning/CONFIG.md` for the `smart_tier` and `commercial` fields.
 3. Spawn `aa-critic-product`, `aa-critic-spec`, and `aa-critic-execution` as parallel fresh subagents, each with the model configured for its tier in `.planning/CONFIG.md`. If `commercial: yes`, also spawn `aa-critic-market` the same way. Give each subagent exactly two inputs: its two sections of `playbooks/critics.md` verbatim — `Panel protocol` plus its own critic section (the same pair its agent definition names) — and the full draft plan gathered in step 1; nothing else. They do not see each other's output.
 4. Collect every subagent's Verdict format block.
