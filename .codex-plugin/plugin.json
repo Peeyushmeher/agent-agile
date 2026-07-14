@@ -1,7 +1,7 @@
 {
   "name": "agent-agile",
   "description": "Agile planning + execution for AI coding agents: grill the idea, plan with OKRs, adversarial critic panel with kill authority, cheap-model story cards, parallel wave execution, demo-brief review gates.",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "author": {
     "name": "Peeyush Yerremsetty"
   },
