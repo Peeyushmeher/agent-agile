@@ -67,6 +67,7 @@ Asked one at a time, in order, whether or not the grill pre-filled some of them.
    - *Why it's asked:* constraints not captured here get discovered mid-build, when they're expensive to fix.
    - *Thin answer looks like:* "keep it simple," "whatever's best," "no real budget limit" without a number.
    - *Pushback:* "Give me the actual limits — language/framework if fixed, platform it must run on, and a number for budget, even a rough ceiling."
+   - *Environment probe:* when the answer names a target platform, check — never assume — whether this machine can build and verify it (toolchain present, emulator/device reachable, signing possible). Probe by running things, not by consulting a belief about what's possible. Whatever can't be exercised here is not a reason to stop or steer; it's a row on the human's side of the split statement below.
 
 5. **Out of scope for v1.** What is explicitly NOT being built.
    - *Why it's asked:* this kills epics before they're born; a short or generic out-of-scope list is the leading indicator of scope creep later.
@@ -87,6 +88,8 @@ Asked one at a time, in order, whether or not the grill pre-filled some of them.
    - *Why it's asked:* sets epic size; the default is small, frequent demos so failure is caught early and cheap.
    - *Thin answer looks like:* "just show me when it's all done."
    - *Pushback:* "Would you rather see something demoable after each small slice, or batch several slices before you look? Default is small and frequent — say so if you want otherwise."
+
+**The split statement.** After the eighth answer, before any drafting: tell the user in a few plain lines how the work divides — *"my part is everything this environment lets me build and verify; your part is what this run has discovered it can't do,"* followed by the actual list so far (foreseeable prerequisites, gate decisions they'll be asked to make, end-of-run tasks only a human can do — testing on a physical device, submitting to a store, completing identity checks). Then say what the process will feel like: plan → adversarial review → parallel build in waves → a demo at every gate where they decide. This is narration, not a gate — nothing is blocked, nothing needs confirming. Its only job is that the user is never surprised by whose job something turns out to be. The list is discovered per-run from their answers and this machine; it is never a fixed statement about what the system can or can't build.
 
 ---
 
@@ -231,8 +234,10 @@ At planning time, extract every external thing only a human can provide — a wo
 - **Domains** — any DNS name the plan assumes is registered and pointed somewhere.
 - **OAuth app registrations** — any app-level credential registered with a third party (client ID/secret) rather than a per-user key.
 - **Hardware** — any physical device, sensor, or machine the plan assumes is present and reachable.
+- **Human-only steps** — anything a vendor requires a person to click through: store submission and app review, identity/KYC verification, accepting terms, payment onboarding.
+- **Out-of-reach verification** — anything this environment can build but not verify (a physical device to test on, a platform this machine lacks). The human's test IS the acceptance check for these — list it as their task, not as done.
 
-For every item found, write a row in `.planning/PREREQS.md` from the template at `playbooks/templates/PREREQS.md`: what it is, why the plan breaks without it, exactly where to get it, its estimated cost, and exactly where it goes — an environment variable name or a file path, never "somewhere in config." Status starts `pending`; it moves to `done` once the user has it, and `verified` once execution has confirmed it actually works (key present, a real test call succeeds) — a checked box is not verification.
+For every item found, write a row in `.planning/PREREQS.md` from the template at `playbooks/templates/PREREQS.md`: what it is, why the plan breaks without it, exactly where to get it, its estimated cost, exactly where it goes — an environment variable name or a file path, never "somewhere in config" — and **when it's needed** (before the first epic, at a named epic's gate, or after the final epic), so the human sees their whole share of the timeline up front, not just the shopping list. Status starts `pending`; it moves to `done` once the user has it, and `verified` once execution has confirmed it actually works (key present, a real test call succeeds) — a checked box is not verification.
 
 This list gets hunted for gaps during panel review — a missed prerequisite is a block, not a flag. Execution refuses to launch until every item on the list is verified, and a prerequisite discovered missing mid-run stops that run rather than being faked or silently mocked.
 

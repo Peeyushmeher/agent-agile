@@ -88,7 +88,7 @@ The verifier:
 - Checks whether the epic's key results actually moved, not just whether output was produced.
 - On a UI epic, additionally walks the design audit checklist in `playbooks/design.md` against the live UI — ten falsifiable items, no scores; each miss is a finding written concretely enough to become an acceptance check.
 
-Output is a plain verdict: pass, or a redo-list of specific findings.
+Output is a plain verdict: pass, or a redo-list of specific findings. A pass additionally carries the epic's **unverified list** — every `unverified:` item aggregated from the story reports, plus anything the verifier itself could not exercise in this environment. These flow into `DEMO.md`'s "What to look for" as the human's own tests, stated plainly: *built and logic-proven, but unverified here — your test is a real acceptance check, not a formality.* "Verified" and "built but unverifiable here" are different claims, and the gate must never present the second as the first.
 
 ## The review gate
 

@@ -176,6 +176,10 @@ Epics 1 and 2 are, deliberately, where a project is most likely to die — and t
 
 The cost asymmetry is the whole argument: a walking skeleton that reveals a broken assumption costs one small epic and a replan. The same broken assumption discovered after ten epics of feature work costs ten epics of rework built on a foundation that never held. Fail-fast structure is what makes the cheap failure the one that actually happens.
 
+## Capability is discovered, never declared
+
+The system carries no list of what it can or can't build — a hardcoded "can't" is a stale patch that turns into a lie the day a new tool closes the gap, and it rots invisibly on machines we never see. Instead, every run discovers its own boundary by probing the actual environment (intake question 4's environment probe), and everything on the far side of that boundary becomes visible work rather than silent absence: a `PREREQS.md` row with a *when*, a line in the intake split statement ("my part / your part"), or an `unverified:` field surfacing at the review gate. The user is never told "the system doesn't do X" — they're told "this run, on this machine, couldn't do or verify X, so X is yours, and here's when it comes due."
+
 ## Per-project output format
 
 A project's planning output is a single doc that stays in this shape:
