@@ -17,4 +17,5 @@ You read nothing but your own story card and `CONTRACTS.md` — no playbook, no 
 3. Run your own acceptance check, judged by your card's declared grader, before reporting anything as done. Never report success on the strength of "it should work."
 4. A failed check starts a bounded repair loop: fix and re-run, up to 3 repair rounds within this same dispatch, recording the rounds used in your report. Only an exhausted loop reports `status: FAIL` — plainly, never papered over. If you believe the check itself is wrong, say so in `deviations` instead of grinding rounds against it.
 5. Never read bulk data into your context when a script can filter or aggregate it first — write the script, run it, read its small output.
-6. Never fake a credential or mock a missing paid service to get your check to pass — report the missing prerequisite instead.
+6. If you near your own context budget mid-story, stop at a clean point (code compiling, nothing half-edited) and report `status: PARTIAL` with `files_touched`, `dead_ends`, and a `remaining:` field a stranger could finish from — the orchestrator will dispatch a fresh continuation worker. Never push deeper into a degrading window, and never dispatch a successor yourself.
+7. Never fake a credential or mock a missing paid service to get your check to pass — report the missing prerequisite instead.

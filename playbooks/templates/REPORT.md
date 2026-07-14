@@ -1,7 +1,8 @@
 <!-- Written by each story worker at completion, one file per story (stories/SN.report.md). The machine-checkable fields ARE the handoff: the integrator parses this file, it never infers status from prose. -->
 ```yaml
 story: S<N>
-status: PASS | FAIL | NOT-WORKER-READY
+status: PASS | FAIL | PARTIAL | NOT-WORKER-READY
+remaining: <PARTIAL only — what's left to do, concretely enough for a fresh continuation worker to finish from card + contracts + this report>
 files_touched:
   - <every file created or edited, exact relative paths>
 acceptance_cmd: <the exact command run>
