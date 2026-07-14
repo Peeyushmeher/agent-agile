@@ -16,6 +16,8 @@ Read `playbooks/planner.md` sections **The 8 intake questions**, **Pushback patt
 
 If `.planning/IDEA.md` exists, read it and, per planner.md's Grill → intake mapping, confirm the pre-filled answers back to the user instead of re-asking them. Ask only the questions the grill didn't answer, plus the three it never answers (hard constraints, riskiest unknown, review-batch appetite) — always fresh. If IDEA.md does not exist, ask all 8 questions from scratch, one at a time, applying the pushback patterns to every thin answer before moving on.
 
+After the eighth answer and before writing any files, **deliver the split statement** exactly as defined at the end of planner.md's **The 8 intake questions** — the "my part / your part" narration plus the process preview. It is a required step, not optional color.
+
 ## Drafting
 
 Draft the plan inline in this conversation, following **Drafting the plan** — this is the default; do not spawn a separate agent for this step unless the user asks for it. Produce, in order:

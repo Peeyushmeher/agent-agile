@@ -110,7 +110,7 @@ Gate: multi-epic projects only; single-epic throwaways skip the panel (anti-cere
 
 The #1 silent killer of autonomous runs: a worker hits a missing API key at 2am and stalls or fakes around it. So:
 
-- At planning time, the planner extracts **every external thing only a human can provide**: API keys, paid subscriptions, accounts, domains, OAuth registrations, hardware. Writes `.planning/PREREQS.md`: what to get, where, cost, and exactly where to put it (env var name / file path).
+- At planning time, the planner extracts **every external thing only a human can provide**: API keys, paid subscriptions, accounts, domains, OAuth registrations, hardware, human-only steps (store submission, KYC), and out-of-reach verification. Writes `.planning/PREREQS.md`: what to get, where, cost, exactly where to put it (env var name / file path), and **when it's needed** (before first epic / at a named gate / after the final epic).
 - The spec auditor hunts for missed prereqs — misses are BLOCKs.
 - **Preflight:** `/aa-autopilot` and `/aa-execute-epic` refuse to launch until every item checks out — verified where possible (key present, test call succeeds), not just checkbox-trusted.
 - **Mid-run discovery:** circuit-break — pause, write the missing item into PREREQS.md + STATE.md, notify. Never fake a credential; never silently mock a missing paid service.
@@ -216,8 +216,10 @@ Runs every epic back-to-back until the roadmap is done: plan epic → execute �
 | `aa-worker` | cheap | Wave 1 story execution |
 | `aa-integrator` | smart | Wave 2 integration + demo brief |
 | `aa-verifier` | smart | Epic verification + autopilot gate stand-in |
+| `aa-researcher-domain` | smart | Research fan-out: domain edges → risk register |
+| `aa-researcher-ecosystem` | smart | Research fan-out: prior art / ecosystem → risk register |
 
-The Grill runs in the main loop (interactive), not as a subagent.
+The Grill runs in the main loop (interactive), not as a subagent. On multi-epic roadmaps the two researchers run in parallel after the first roadmap draft, producing `.planning/RESEARCH.md` — a risk register whose `fixture`-ranked rows tag their target epics and become fixture stories (an ignored fixture row is a spec-auditor BLOCK); see planner.md "Research fan-out and the risk register".
 
 **Model tier abstraction:** `CONFIG.md` maps `smart_tier` / `cheap_tier` to concrete models per harness (defaults: harness's strongest ↔ cheapest-capable). Ship the principle, not hardcoded model names. Agent definitions reference tiers; harness adapters resolve them.
 
@@ -249,7 +251,7 @@ agent-agile/
 ├── skills/                   # thin dispatchers (~50 lines each): frontmatter + "read playbook X, execute workflow Y"
 │   └── aa-<name>/SKILL.md    # frontmatter restricted to agentskills.io common subset:
 │                             #   name, description, license, metadata (+ allowed-tools where Claude-specific, harmless elsewhere)
-├── agents/                   # aa-planner.md, aa-critic-*.md, aa-worker.md, aa-integrator.md, aa-verifier.md, aa-contractor.md
+├── agents/                   # aa-planner.md, aa-critic-*.md, aa-researcher-*.md, aa-worker.md, aa-integrator.md, aa-verifier.md, aa-contractor.md
 ├── playbooks/                # THE PAYLOAD — all real logic lives here, referenced by skills
 │   ├── system.md             # the methodology (this doc's §3–§7, operationalized)
 │   ├── planner.md            # intake scripts, pushback patterns, slicing rules, worker-readiness test

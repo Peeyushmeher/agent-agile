@@ -13,6 +13,12 @@ test('installs skills, agents, playbooks into dest', () => {
   assert.ok(existsSync(join(dest, 'agent-agile', 'playbooks', 'system.md')));
 });
 
+test('multi-harness flags install to both roots', () => {
+  const out = execFileSync('node', ['bin/install.js', '--claude', '--codex', '--opencode', '--global', '--dry-run'], { encoding: 'utf8' });
+  assert.match(out, /[\\/]\.claude[\\/]skills[\\/]aa-grill/);
+  assert.match(out, /[\\/]\.agents[\\/]skills[\\/]aa-grill/);
+});
+
 test('dry-run writes nothing', () => {
   const dest = mkdtempSync(join(tmpdir(), 'aa-dry-'));
   const out = execFileSync('node', ['bin/install.js', '--claude', '--dest', dest, '--dry-run'], { encoding: 'utf8' });

@@ -2,6 +2,18 @@
 
 Newest first. Each entry says *why* the release exists, not just what changed.
 
+## 0.2.1
+
+Hotfix + hardening from the first adversarial deep-dive of the system itself (5 finders → 48 findings → 2 independent verifiers). The theme of what it caught: in a handful of places, "machine-checkable" was an instruction rather than a mechanism.
+
+- **Installer fix** — the documented multi-harness command (`--claude --codex --opencode`) silently installed nothing for Codex: `--claude` was never read and `--opencode` overwrote the harness choice last. The installer now installs to every requested harness root; `--global` is accepted as the (default) documented spelling.
+- **`files_touched` reality check** — new `scripts/files-audit.js`: Wave 2 diffs the actual changed files against declared card ownership and reported `files_touched`, so an edit a worker omitted from its report can no longer hide. The one hole in the wave-parallelism safety story, closed with an exit code.
+- **Scoped redo cap survives sessions** — STATE.md gains a "Scoped redo spent" line written at fix-worker dispatch; the one-scoped-attempt-ever rule no longer lives in anyone's memory across a session boundary.
+- **PARTIAL joins the Wave-2 mechanical flags** — execution.md's flag list now matches the integrator agent and the relay rule; an unfinished relay story can't be merged by an integrator following that section literally.
+- **Split statement wired as a required step** — `/aa-new-project` and `/aa-import` now name the "my part / your part" narration explicitly instead of relying on playbook prose an agent might skim past.
+- **DESIGN.md catches up to v0.2** — research fan-out subsystem and both researcher agents documented; PREREQS description gains the "When needed" column.
+- Plugin manifests bumped to match the released version (missed in the 0.2.0 release pass).
+
 ## 0.2.0
 
 Agents fail at handoffs, so this release makes every handoff machine-checkable. Grounded in Anthropic's CwC 2026 material (a subagent returning "fairly confident" instead of `0.72` failed an eval; 216k→7.6k tokens by scripting instead of reading) and a full survey of the lane — every steal-worthy idea from GSD, BMAD, gstack, spec-kit, Kiro, Agent OS, superpowers, and Ralph is either in here or documented as rejected.

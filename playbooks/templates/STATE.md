@@ -4,4 +4,5 @@
 - **Now:** <one sentence: what is in progress right now>
 - **Next:** <one sentence: the next action>
 - **Pointers:** <files the next session must read, max 3>
+- **Scoped redo spent:** <none | epic-NN, …> <!-- one scoped attempt per epic, ever; written at fix-worker dispatch, checked before offering the scoped path -->
 - **Blockers:** <none | description>
