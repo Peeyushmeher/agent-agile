@@ -28,25 +28,43 @@ Any collision is a full refuse: do not launch Wave 1. Report the exact colliding
 
 **Prerequisites check.** Read `PREREQS.md`. Every row must be `verified`, or `done` in the specific case where a status of `verified` is not actually checkable (nothing to test-call). For any row that has a stated verification command, run it now — don't trust the checkbox. A `pending` row, or a `done` row that fails its verification command, blocks launch: stop, and treat it exactly like a mid-run missing-prerequisite circuit breaker (see below) rather than pushing forward and hoping.
 
-Only once both checks are clean does Wave 1 start.
+**The readiness dashboard.** Once both checks have run, print the gate table — rigor the user can see before any tokens are spent on workers, not after:
+
+```
+| Gate                                                | Status                          |
+|-----------------------------------------------------|---------------------------------|
+| Contracts frozen (shapes + examples + failure shapes) | ✓ / ✗ <what's missing>        |
+| File collisions                                     | none / ✗ <files, stories>       |
+| Prerequisites                                       | all verified / ✗ <pending rows> |
+| Every card carries a grader                         | ✓ / ✗ <cards without one>       |
+| Control set                                         | N checks / empty (first epic)   |
+VERDICT: CLEARED — launching N workers  |  BLOCKED — <the failing row>
+```
+
+Any ✗ is the refuse behavior already defined above — the dashboard renders the decision, it never softens it. An empty control set is normal on Epic 1 and only there.
+
+Only on a CLEARED verdict does Wave 1 start.
 
 ## Wave 1 — stories
 
 Dispatch one fresh-context cheap-tier subagent per story card, in parallel. Each worker's input is exactly two things: its own story card and `CONTRACTS.md`. Nothing else — no other story's card, no wider codebase exploration mandate, no epic-level context beyond what the card and contracts already state. This is what makes the card itself the unit of work: if a card can't be completed from just those two inputs, the card was under-specified at slicing time, not the worker under-capable.
 
-Each worker builds against its `Files it owns` list only, then **runs its own acceptance check** — the runnable command or verifiable assertion from its card — before reporting anything as done. A worker never reports success on the strength of "it should work."
+Each worker builds against its `Files it owns` list only, then **runs its own acceptance check** — the runnable command or verifiable assertion from its card, judged by the card's declared grader — before reporting anything as done. A worker never reports success on the strength of "it should work."
 
-Each worker writes `stories/SN.report.md`: 3–5 lines covering what was built, the acceptance check result, and any deviations from the card. One file per story keeps this parallel-safe — nothing is appended to a shared file mid-wave.
+**Compute over context.** A worker never reads bulk data into its own context when a script can filter or aggregate it first — write the script, run it in the sandbox, read its small output. Acceptance checks invoke scripts and assert on their output; they never depend on the model eyeballing raw data.
 
-If a worker's acceptance check fails, that worker gets exactly one retry within the same dispatch. If it fails again, flag the story and do not merge its output. A flagged story surfaces at Wave 2 and blocks that story's slice of the epic-level check rather than being silently absorbed.
+**The repair loop.** A failed acceptance check is not a report — it's the start of a bounded repair loop. The worker fixes and re-runs its check, up to **3 repair rounds** within the same dispatch. Only an exhausted loop reports `FAIL`; the story is then flagged and its output is not merged. A flagged story surfaces at Wave 2 and blocks that story's slice of the epic-level check rather than being silently absorbed. The loop repairs against the check as written — a worker that believes the *check itself* is wrong reports that as a deviation instead of grinding rounds against it.
+
+Each worker writes `stories/SN.report.md` from `playbooks/templates/REPORT.md` — a typed report, not prose: status, exact files touched, the acceptance command and its verbatim output, repair rounds used, deviations, and contract change requests. The machine-checkable fields are the handoff; anything that matters goes in a field, never only in `notes:`. One file per story keeps this parallel-safe — nothing is appended to a shared file mid-wave.
 
 ## Wave 2 — integrate
 
 Dispatch one fresh-context smart-tier subagent as integrator. Its job:
 
-- Concatenate every `stories/SN.report.md` into `REPORTS.md`.
+- **Parse every `stories/SN.report.md`** — the typed fields, not the prose. Four conditions get flagged mechanically, no reading-between-the-lines required: `status: FAIL` or `NOT-WORKER-READY`; any `files_touched` entry outside that story's ownership list (a collision that slipped past pre-flight); a non-empty `deviations` list; a non-empty `contract_change_requests` list. `repair_rounds_used` of 2 or more is a card-quality signal — note it in `LEARNINGS.md`, because a card that needed that many repairs was under-specified at slicing time.
 - Wire the cross-story seams the individual workers couldn't see — the places where two stories' outputs need to connect.
-- Run the epic-level acceptance check: the demo sentence, exercised for real (the actual command or flow it describes, not a re-statement of the story-level checks).
+- Run the epic-level acceptance check: the demo sentence, exercised for real (the actual command or flow it describes, not a re-statement of the story-level checks). If it fails on a seam the integrator owns — cross-story wiring, not any single story's internals — repair and re-run, up to **3 repair rounds**. Never reach into a story's owned files to force a pass: a failure inside one story's slice is that story's flag, routed to the gate, not something to patch over.
+- **Run the control set:** every row in `.planning/CONTROL.md`. These are previously-green checks from earlier epics — a row that fails means this epic broke something that used to work, and that is a finding for the gate exactly as if the verifier had found it. Skip only when the file doesn't exist yet (Epic 1).
 - Write `DEMO.md` (template: `playbooks/templates/DEMO.md`) and `LEARNINGS.md` (template: `playbooks/templates/LEARNINGS.md`). If `STATE.md` records panel-refresh FLAGs for this epic (see `critics.md` "Panel refresh"), copy them into `DEMO.md`'s "what to look for" section so the review gate judges them.
 - Flip the epic's row in `ROADMAP.md` to reflect its new status.
 - Update `STATE.md` to point at wherever the epic now sits (verification next, or done).
@@ -72,8 +90,8 @@ Three layers feed the gate, but only one produces its outcome: story-level accep
 
 The gate has exactly three outcomes:
 
-- **Approve.** The epic is done. Move to the next epic.
-- **Redo.** Every tip from the human, and every finding from the verifier, gets converted into a new, concrete acceptance check on the specific story or stories it affects — not a vague "make it better" instruction. Once the affected story cards carry their new checks, re-run Wave 1 for those stories (and Wave 2 to re-integrate), then verify again. This is what stops the same piece of feedback from getting missed twice: it's a check now, not a suggestion.
+- **Approve.** The epic is done. Append its epic-level check to `.planning/CONTROL.md` (create the file from `playbooks/templates/CONTROL.md` if this is the first approval), then move to the next epic.
+- **Redo.** Every tip from the human, and every finding from the verifier, gets converted into a new, concrete acceptance check on the specific story or stories it affects — not a vague "make it better" instruction. Once the affected story cards carry their new checks, re-run Wave 1 for those stories (and Wave 2 to re-integrate), then verify again. This is what stops the same piece of feedback from getting missed twice: it's a check now, not a suggestion. And once a redo's new check goes green, append it to `.planning/CONTROL.md` too — a bug that reached the gate once gets re-checked at every Wave 2 after it, mechanically (the template caps the set; retire the oldest non-demo row when full).
 - **Replan.** The epic goes back to slicing entirely — the story breakdown itself was wrong, not just the implementation. The roadmap gets re-examined in light of whatever was learned.
 
 **Scoped redo — the cheap path.** A full redo re-runs whole story workers and re-integration; it is the most expensive move in the system. When the redo-list is patch-sized, don't pay for it. If every finding names the specific file it lives in, every named file is owned by a single already-built story, and no finding implicates `CONTRACTS.md` or a cross-story seam, then instead of re-running the wave: dispatch one cheap-tier fix worker with that story's card (now carrying its new acceptance checks) and the findings, then re-run Verification only. One scoped attempt, ever — if verification fails again, escalate to the full redo above; never chain scoped patches. A finding that can't name its file, spans stories, or questions the contract goes straight to the full redo: the scoped path is for surgical fixes, not for negotiating down real rework.
@@ -89,6 +107,14 @@ Autopilot chains epic runs back to back until the roadmap is done: plan the next
 - **Full-auto.** The verifier stands in for the human at every gate. Demo briefs accumulate across epics so a human can review the whole run's worth of `DEMO.md` files at the end instead of gating each one live.
 
 Preflight (collision check + prerequisites) is required before autopilot launches at all, exactly as it is for a single epic run, and runs again before each epic inside the loop — prerequisites can go stale between epics (a key expires, a quota runs out), so re-verifying per epic instead of once at the top of the run is deliberate, not redundant.
+
+**The ambiguity protocol.** When any run — autopilot or single-epic — hits a question the plan doesn't answer, resolve it in this order:
+
+1. **Check `.planning/DECISIONS.md` first.** A settled decision is applied, never re-asked and never re-litigated. Re-asking a recorded decision is the failure the ledger exists to prevent.
+2. **Auto-resolve without stopping** only when all four hold: the choice is reversible, it matches an existing pattern in the plan or codebase, it spends no money, and it touches no security surface. Record the decision and its reasoning as a new `DECISIONS.md` row (`Decided by: autopilot`).
+3. **Otherwise, route by gate mode.** Interactive or checkpoint: put the question to the user — at least two concrete options with their tradeoffs, a recommendation if there is one — and record the answer in `DECISIONS.md` so it is never asked again. Full-auto: an irreversible, paid, or security-touching ambiguity is a circuit breaker — stop and record where and why in `STATE.md`; do not guess on the user's behalf.
+
+Every gate ruling with a reason attached, every panel BLOCK resolution, and every replan's rationale is also appended to `DECISIONS.md` at the moment it's made. The ledger is append-only: reversing a decision means appending a superseding row, never editing history.
 
 ## Circuit breakers
 

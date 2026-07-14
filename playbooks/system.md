@@ -31,11 +31,12 @@ A Key Result that fails any of these three tests gets pushed back on before plan
 
 **Epic** — a demoable slice. Its definition of done is always a demo sentence: *"I can do X and see Y."* If you can't write that sentence, the epic isn't scoped yet.
 
-**Story card** — exactly four fields, no more:
+**Story card** — exactly five fields, no more:
 
 - **Goal** — one sentence.
 - **Files it owns** — an explicit list. This is the parallelism key: two stories can run at the same time only if their file lists don't intersect.
 - **Acceptance check** — a runnable command or a verifiable assertion, with the expected output.
+- **Grader** — how strictly pass/fail is decided, declared at card-writing time so it's never improvised at check time: `exact_match` (output matches verbatim), `numeric_tolerance(±x%)` (a number within a band), `regex_present` (a pattern appears), `efficiency(<budget>)` (the check passes only within a token or wall budget — cost as a pass/fail criterion, for expensive stories), or `llm_judge(<rubric>)` — the weakest grader, used only when no deterministic one exists, with its rubric pinned on the card.
 - **Contracts it consumes** — the shared interfaces it reads. A story never invents an interface; it only consumes what Wave 0 froze.
 
 Use `playbooks/templates/STORY.md` for the card format.
@@ -54,11 +55,12 @@ A worked example of the chain: the Key Result "a stranger completes checkout una
   STATE.md          # THE BATON. Tiny. "You are here" + pointers to what to read next.
   PREREQS.md        # Human shopping list (API keys, accounts, services) + verification status.
   CONFIG.md         # model tiers, gate mode, harness notes.
+  DECISIONS.md      # Append-only ledger of decisions settled after plan approval. Asked once, never re-asked.
+  CONTROL.md        # Previously-green checks, re-run at every Wave 2 — the regression tripwire.
   epics/EPIC-NN/
     CONTRACTS.md    # Wave 0 output: shared types, schemas, signatures. Frozen during the wave.
-    stories/S1.md…  # Story cards (four fields each).
-    stories/SN.report.md   # 3–5 lines per completed story. One file per story — parallel-safe, no collisions.
-    REPORTS.md      # Wave 2 concatenates the per-story report files into one.
+    stories/S1.md…  # Story cards (five fields each).
+    stories/SN.report.md   # Typed report per completed story (templates/REPORT.md). One file per story — parallel-safe; parsed by Wave 2, never interpreted from prose.
     DEMO.md         # Demo brief: what was built, how to test it, what to look for.
     LEARNINGS.md    # Written at epic close: deviations, gotchas, contract changes.
 ```
@@ -71,7 +73,13 @@ Templates for each of these live at `playbooks/templates/<name>.md`.
 
 **Epic to epic (the three-file read rule):** the next epic's planning session reads exactly three things — `PROJECT.md`, `ROADMAP.md`, and the previous epic's `LEARNINGS.md`. Never the whole project history. Learnings are the compressed memory; the codebase itself is the ground truth for everything else. This is what keeps planning context small no matter how many epics have already shipped.
 
-Why this matters in practice: a ten-epic project never needs a session that reads all ten epics' worth of history to plan epic eleven. The three-file rule is the mechanism that makes long projects as cheap to plan late as they were to plan early — without it, planning cost would grow with project size instead of staying flat. (The one deliberate exception: panel-refresh epics on 5+ epic roadmaps also read `CONFIG.md` — see `critics.md` "Panel refresh".)
+Why this matters in practice: a ten-epic project never needs a session that reads all ten epics' worth of history to plan epic eleven. The three-file rule is the mechanism that makes long projects as cheap to plan late as they were to plan early — without it, planning cost would grow with project size instead of staying flat.
+
+Three deliberate, narrow exceptions, all slicing-time and all planner-side (workers stay sealed to card + contracts):
+
+1. Panel-refresh epics on 5+ epic roadmaps also read `CONFIG.md` — see `critics.md` "Panel refresh".
+2. Slicing reads `DECISIONS.md` when it exists — a settled decision is never re-litigated, and re-asking one is the failure the ledger exists to prevent.
+3. Slicing runs **one targeted grep** across all prior epics' `LEARNINGS.md` for the current epic's files and topics — a search, never a read-everything. Hits get baked into the story cards, so learnings reach workers through the card, not through workers going looking.
 
 ## Sprints are scope-boxes
 
@@ -127,8 +135,8 @@ Every sprint close produces a **demo brief** — a required artifact, not a stat
 
 The gate has exactly three exits:
 
-- **Approve** → learnings get written to `LEARNINGS.md`, the roadmap flips, the next epic gets planned.
-- **Redo** → the reviewer's tips become new acceptance checks on the affected story cards, and the same epic re-runs its wave against the sharpened checks. Feedback becomes testable this way — a redo can never miss the same point twice. A patch-sized redo-list takes the scoped path in `execution.md` instead: one cheap-tier fix worker plus re-verification, no full wave re-run.
+- **Approve** → learnings get written to `LEARNINGS.md`, the roadmap flips, the epic-level check joins `CONTROL.md`, the next epic gets planned.
+- **Redo** → the reviewer's tips become new acceptance checks on the affected story cards, and the same epic re-runs its wave against the sharpened checks. Feedback becomes testable this way — a redo can never miss the same point twice. Once a redo's new check goes green, it also joins `CONTROL.md`: a bug that reached the gate once is re-checked at every Wave 2 after, forever (capped — see the template). A patch-sized redo-list takes the scoped path in `execution.md` instead: one cheap-tier fix worker plus re-verification, no full wave re-run.
 - **Replan** → the epic goes back to slicing, and the roadmap after it gets re-examined, since a replan usually invalidates assumptions later epics were built on.
 
 The demo brief exists because "looks about right" is not a review — it's a guess dressed up as a decision. A brief that names the exact command to run and the exact thing to look for turns the gate into a real check, and it's what makes Approve/Redo/Replan a decision instead of a mood.

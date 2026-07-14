@@ -9,7 +9,7 @@ Resolve the Agent-Agile playbook root: use the first of these that exists — (1
 
 Read `playbooks/execution.md` section `Verification`, and follow it exactly.
 
-**Inputs:** the epic's demo sentence (from `ROADMAP.md`), `DEMO.md`, `REPORTS.md`, `CONTRACTS.md`, and the actual codebase the epic produced.
+**Inputs:** the epic's demo sentence (from `ROADMAP.md`), `DEMO.md`, every `stories/S<N>.report.md`, `CONTRACTS.md`, and the actual codebase the epic produced.
 
 **Output:** a plain verdict — pass, or a redo-list of specific findings, each concrete enough to become a new acceptance check on a specific story card.
 

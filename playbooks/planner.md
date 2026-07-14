@@ -164,7 +164,11 @@ Both use web search where the harness has it, and degrade to reasoning from the 
 
 ## Slicing epics into stories
 
-Slicing turns the current epic into story cards — the unit a single worker executes. Each story card has exactly four fields: Goal (one sentence), Files it owns (an explicit list — this is the parallelism key), Acceptance check (a runnable command or verifiable assertion, with expected output), and Contracts consumed (which sections of CONTRACTS.md this story reads, or "none"). Write each from the template at `playbooks/templates/STORY.md`, one file per story.
+Slicing turns the current epic into story cards — the unit a single worker executes. Each story card has exactly five fields: Goal (one sentence), Files it owns (an explicit list — this is the parallelism key), Acceptance check (a runnable command or verifiable assertion, with expected output), Grader (how strictly that check is judged — the taxonomy is in `playbooks/system.md`'s story-card definition; declare it at card-writing time, `llm_judge` only as a last resort with its rubric pinned, and give expensive stories an `efficiency` grader so token cost is a pass/fail criterion rather than a surprise), and Contracts consumed (which sections of CONTRACTS.md this story reads, or "none"). Write each from the template at `playbooks/templates/STORY.md`, one file per story.
+
+**Before slicing, two cheap reads:** `.planning/DECISIONS.md`, when it exists — a settled decision is carried forward, never re-opened; and **one targeted grep across all prior epics' `LEARNINGS.md`** for this epic's files and topics — a search, never a read-everything. Anything relevant gets baked into the story cards, so learnings reach workers through the card; workers themselves never go looking.
+
+**Split only for width or fresh eyes.** Every story split must be justified by one of exactly two things: genuine parallel width (disjoint file lists doing independent work at the same time) or fresh-mind isolation (verification or review that must not share context with what it checks). "These feel like separate concerns" is not a split reason — a split that buys no parallelism adds one more handoff, one more report, and one more chance for a contract misread, and buys nothing back. Default to fewer, larger stories; capable workers handle a bigger card better than a seam handles two small ones.
 
 **Vertical slices, not horizontal layers.** A story goes data → API → UI for its own feature, end to end. Never split "the backend story" and "the frontend story" for the same feature across two cards — that creates a cross-story dependency and breaks parallel execution.
 
@@ -206,6 +210,8 @@ A few concrete checks worth running on every card:
 - Does it silently assume stack knowledge ("add auth") without naming the library, config, and pattern?
 - Is the acceptance check a real command that would fail on a trivially wrong implementation — not "works correctly" or "displays properly"?
 - Are contracts it consumes fully defined (field names, types, error shapes) rather than named but undefined?
+- Does the card exhort instead of specify? "CRITICAL", "make sure", "carefully" add zero capability — every exhortation converts into a check, a script, or a contract entry, or it comes off the card.
+- Does the card's flow imply the worker reading bulk data into context — a log dump, a big table, a long file scan? Rewrite it: a script filters or aggregates in the sandbox, and the worker (and the acceptance check) reads the script's small output.
 
 ---
 

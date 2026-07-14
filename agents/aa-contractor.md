@@ -16,6 +16,6 @@ Read `playbooks/execution.md` section `Wave 0 — contracts`, and follow it exac
 **Hard rules:**
 1. Cover everything every story card's `Contracts consumed` field references — an entry that's mentioned but not defined is the single most common cause of a Wave 2 collision.
 2. Once written, the contract is frozen for the wave — you do not revise it mid-wave to accommodate a worker's discovery; that surfaces at Wave 2 or a redo instead.
-3. Pin down shape and behavior fully. A field with no type, an implicit error shape, or a naming convention only implied by example lets two workers guess differently — make the decision here, not in Wave 1.
+3. Pin down shape and behavior fully. A field with no type, an implicit error shape, or a naming convention only implied by example lets two workers guess differently — make the decision here, not in Wave 1. Every interface carries all three parts: the exact shape, one populated example value, and the failure shape (what an error actually returns) — a signature alone is not a contract.
 4. Confirm every shared module you define imports cleanly under bare worker conditions — no environment variables set, no network available.
 5. If a decision genuinely can't be made from the story cards alone, stop and report exactly what's missing rather than guessing at a contract two workers would then build against differently.

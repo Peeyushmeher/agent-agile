@@ -83,7 +83,8 @@ No level below stories. No story points, no ceremonies, no burndown.
 - **KRs** must pass 3 tests: measurable by command/count; outcome not output; falsifiable at review with no debate.
 - **Initiative kill-filter:** "does this epic serve an initiative? No → cut."
 - **Epic DoD** is always a demo sentence: *"I can do X and see Y."*
-- **Story card = exactly four fields:** Goal (one sentence) · Files it owns (explicit list — the parallelism key) · Acceptance check (runnable command / verifiable assertion) · Contracts it consumes.
+- **Story card = exactly five fields:** Goal (one sentence) · Files it owns (explicit list — the parallelism key) · Acceptance check (runnable command / verifiable assertion) · Grader (how pass/fail is decided: `exact_match` / `numeric_tolerance(±x%)` / `regex_present` / `efficiency(<budget>)` / `llm_judge(<rubric>)` — the last only when nothing deterministic exists, rubric pinned on the card) · Contracts it consumes.
+- **Slicing bias — split only for width or fresh eyes:** a story split must buy genuine parallel width (disjoint files, independent work) or fresh-mind isolation (verification); "separate concerns" alone is not a split reason. Fewer, larger stories beat more, smaller handoffs.
 - **Epic 1 is always the walking skeleton** — thinnest end-to-end slice; combined with Q6, Epics 1–2 are deliberately where the project is most likely to die (cheaply).
 - **Per-project output:** OKRs → initiatives → ordered epic list (riskiest first, each with demo sentence) → full story breakdown for the **current epic only**. Future epics stay one-line.
 
@@ -125,11 +126,12 @@ The #1 silent killer of autonomous runs: a worker hits a missing API key at 2am 
   STATE.md          # THE BATON. Tiny. "You are here" + pointers.
   PREREQS.md        # Human shopping list + verification status.
   CONFIG.md         # model tiers, gate mode, harness notes.
+  DECISIONS.md      # Append-only decisions ledger — settled after plan approval, never re-asked.
+  CONTROL.md        # Previously-green checks re-run at every Wave 2 — the regression tripwire (capped).
   epics/EPIC-NN/
-    CONTRACTS.md    # Wave 0 output. Frozen during the wave.
-    stories/S1.md…  # Story cards (4 fields)
-    stories/SN.report.md   # 3–5 lines per completed story (per-story file = parallel-safe)
-    REPORTS.md      # Wave 2 concatenates the SN.report.md files
+    CONTRACTS.md    # Wave 0 output. Frozen during the wave. Every interface: exact shape + populated example + failure shape.
+    stories/S1.md…  # Story cards (5 fields)
+    stories/SN.report.md   # Typed report per completed story (templates/REPORT.md) — parsed by Wave 2, never inferred from prose
     DEMO.md         # Demo brief (what was built / how to test / what to look for)
     LEARNINGS.md    # Written at epic close: deviations, gotchas, contract changes
 ```
@@ -154,16 +156,20 @@ Pre-flight — COLLISION CHECK (pure file logic, no AI)
   File ownership IS the dependency graph. Also: PREREQS verified.
       ↓
 Wave 1 — STORIES (parallel, cheap tier)
-  One fresh-context subagent per story. Input: ONLY its 4-field card + CONTRACTS.md.
-  Build → run own acceptance check → write SN.report.md.
-  Fail own check → one retry; fail again → flagged, not merged.
+  One fresh-context subagent per story. Input: ONLY its 5-field card + CONTRACTS.md.
+  Build → run own acceptance check (per its grader) → bounded repair loop on failure
+  (≤3 rounds, same dispatch) → typed SN.report.md. Exhausted loop → FAIL, flagged, not merged.
       ↓
 Wave 2 — INTEGRATE (serial, smart tier)
-  Integrator merges reports, wires cross-story seams, runs epic-level check,
+  Integrator PARSES the typed reports (flags mechanically: FAIL / out-of-ownership
+  files / deviations / contract change requests), wires cross-story seams, runs
+  epic-level check (≤3 seam-repair rounds), re-runs the CONTROL.md regression set,
   writes DEMO.md + LEARNINGS.md, flips ROADMAP.md, updates STATE.md.
       ↓
 Verifier gate → Approve / Redo / Replan
 ```
+
+The pre-flight prints a **readiness dashboard** before Wave 1 — contracts pinned, collisions, prerequisites, graders on every card, control-set size, with a CLEARED/BLOCKED verdict — so the rigor is visible before tokens are spent, not asserted after.
 
 **Dependency rules (how parallelism is structured out, not managed):** contracts before code (Wave 0) · file ownership is the graph · vertical slices over horizontal layers (each story goes DB→API→UI for its own feature) · epics are the sync points (run one at a time, each ends integrated + demoable) · every story self-verifies.
 
@@ -175,8 +181,9 @@ Verifier gate → Approve / Redo / Replan
 | Epic | **Verifier agent** (smart tier, fresh context, didn't write the code) | Goal-backward: is the demo sentence actually TRUE? Re-runs acceptance checks, pokes edge cases, checks KR progress |
 | Gate | Human (or Verifier standing in, in autopilot) | Reads DEMO.md → **Approve / Redo / Replan** |
 
-- **Redo:** user tips (or Verifier findings) become **new acceptance checks** on the affected stories; the wave re-runs. Feedback becomes testable — a redo can't miss the same point twice.
+- **Redo:** user tips (or Verifier findings) become **new acceptance checks** on the affected stories; the wave re-runs. Feedback becomes testable — a redo can't miss the same point twice. Once green, the new check joins `CONTROL.md`, so a bug that reached the gate once is re-checked mechanically at every Wave 2 after.
 - **Replan:** epic back to slicing; roadmap after it re-examined.
+- **Approve:** the epic-level check joins `CONTROL.md` — every approved epic leaves a permanent regression tripwire behind it (set capped; oldest non-demo rows retire).
 - **Demo brief (DEMO.md) is a required artifact, not vibes:** what was built · exact steps/URL/command to test · what "working" looks like + edge cases to poke.
 
 ## 7. Autopilot (`/aa-autopilot`)
@@ -185,6 +192,7 @@ Runs every epic back-to-back until the roadmap is done: plan epic → execute �
 
 - **Gate modes, set at start:** `--gate full-auto` (Verifier takes the human's seat at every epic gate; demo briefs accumulate for end review) · `--gate checkpoint` (auto within an epic, ping the human between epics) · default = interactive gate every epic.
 - **Circuit breakers (pre-registered, non-negotiable):** epic fails verification twice after redo → STOP, write STATE.md with where/why. Missing prereq discovered → STOP per §3.4. Never build ten epics on top of a broken one ("death train" prevention).
+- **Ambiguity protocol:** any question the plan doesn't answer checks `DECISIONS.md` first (settled = applied, never re-asked). Auto-resolve only what is reversible, pattern-matching, free, and security-clean — recorded in the ledger. Anything else routes to the user by gate mode; in full-auto, irreversible/paid/security ambiguity is a circuit breaker, never a guess. Every gate ruling, panel BLOCK resolution, and replan rationale is appended to the ledger the moment it's made.
 - Preflight requires PREREQS.md fully verified before launch.
 
 ## 8. Agents roster
@@ -278,6 +286,7 @@ Cursor/Gemini: deferred (Gemini CLI EOL'd 2026-06-18 anyway).
 - No web dashboard, no analytics, no telemetry.
 - No Cursor/Gemini/Windsurf/15-harness matrix.
 - No timeline features of any kind (doctrine, not a gap).
+- **No built-in cross-model second opinion.** For high-stakes projects there's a worthwhile optional recipe — run an independent second-vendor CLI (e.g. OpenAI Codex) as an adversarial reviewer over the one highest-cascade artifact, Wave 0's `CONTRACTS.md`, and diff its findings against the panel's — but it stays a recipe, not a feature: it adds a paid second-vendor dependency to every user's PREREQS for a benefit concentrated on one artifact, and the fresh-context critic panel already buys most of the de-correlation for free.
 
 ## 12. Sourcing & provenance
 

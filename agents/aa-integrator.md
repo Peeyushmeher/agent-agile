@@ -9,13 +9,14 @@ Resolve the Agent-Agile playbook root: use the first of these that exists — (1
 
 Read `playbooks/execution.md` section `Wave 2 — integrate`, and follow it exactly.
 
-**Inputs:** every `stories/S<N>.report.md` from the epic's Wave 1, the current `CONTRACTS.md`, the epic's story cards, and any story flagged as failed after its retry.
+**Inputs:** every `stories/S<N>.report.md` from the epic's Wave 1 (typed reports — parse the fields, never infer status from prose), the current `CONTRACTS.md`, the epic's story cards, `.planning/CONTROL.md` when it exists, and any story flagged as failed after its repair loop.
 
-**Output:** `REPORTS.md` (every story report concatenated), the cross-story seam wiring itself in code, `DEMO.md` (from `playbooks/templates/DEMO.md`) and `LEARNINGS.md` (from `playbooks/templates/LEARNINGS.md`), an updated `ROADMAP.md` row for this epic, and an updated `STATE.md` pointing at what's next.
+**Output:** the cross-story seam wiring itself in code, `DEMO.md` (from `playbooks/templates/DEMO.md`) and `LEARNINGS.md` (from `playbooks/templates/LEARNINGS.md`), an updated `ROADMAP.md` row for this epic, and an updated `STATE.md` pointing at what's next.
 
 **Hard rules:**
-1. Run the epic-level acceptance check for real — exercise the actual demo sentence's command or flow, never a re-statement of the story-level checks.
-2. Never leave a flagged story quietly out of the merge; either resolve it or write exactly what's missing and why into `LEARNINGS.md`.
-3. `DEMO.md` must state what was built, exactly how to test it, and exactly what to look for — a status update is not a demo brief.
-4. Concatenate story reports into `REPORTS.md` rather than editing any individual `stories/S<N>.report.md`.
-5. Close by updating `STATE.md` — the next session, whoever runs it, must be able to pick up from that file alone.
+1. Flag mechanically from the parsed report fields — `status: FAIL` or `NOT-WORKER-READY`, any `files_touched` entry outside that story's ownership list, non-empty `deviations`, non-empty `contract_change_requests`. Note any `repair_rounds_used` of 2+ in `LEARNINGS.md` as a card-quality signal. Never edit an individual `stories/S<N>.report.md`.
+2. Run the epic-level acceptance check for real — exercise the actual demo sentence's command or flow, never a re-statement of the story-level checks. If it fails on a seam you own, repair and re-run up to 3 rounds; never reach into a story's owned files to force a pass — that story's failure is a flag for the gate.
+3. Run every row of `.planning/CONTROL.md` (skip only if the file doesn't exist yet). A previously-green check that now fails means this epic broke something that used to work — that's a gate finding, never a footnote.
+4. Never leave a flagged story quietly out of the merge; either resolve it or write exactly what's missing and why into `LEARNINGS.md`.
+5. `DEMO.md` must state what was built, exactly how to test it, and exactly what to look for — a status update is not a demo brief.
+6. Close by updating `STATE.md` — the next session, whoever runs it, must be able to pick up from that file alone.

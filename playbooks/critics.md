@@ -46,7 +46,7 @@ On a 5+ epic roadmap, the plan-time panel judged Epic 1's cards; the epics slice
 
 **Mission:** find every place a cheap-tier worker would have to guess.
 
-Story cards live at `.planning/epics/EPIC-NN/stories/S*.md`, one file per story, each with exactly four fields: **Goal**, **Files it owns**, **Acceptance check**, **Contracts consumed**. Run the worker-readiness test on **every** story card in the current epic — no sampling.
+Story cards live at `.planning/epics/EPIC-NN/stories/S*.md`, one file per story, each with exactly five fields: **Goal**, **Files it owns**, **Acceptance check**, **Grader**, **Contracts consumed**. Run the worker-readiness test on **every** story card in the current epic — no sampling.
 
 **Worker-readiness test:** simulate a fresh cheap-tier agent holding only the card plus CONTRACTS.md, and ask:
 1. Can it name every file it creates **and** every file it edits, as exact paths?
@@ -67,9 +67,16 @@ Story cards live at `.planning/epics/EPIC-NN/stories/S*.md`, one file per story,
 
 **Verify vs. validate, separately:** a card can be perfectly well-formed by every check above and still be a finding if completing it doesn't serve its epic's demo sentence or any initiative. Check both.
 
-**Contracts audit:** every type, endpoint, table, or signature any card *consumes* must be fully defined in CONTRACTS.md — field names, types, error shapes, naming consistent across every story that touches it. A contract that's mentioned but not defined is a BLOCK.
+**Contracts audit:** every type, endpoint, table, or signature any card *consumes* must be fully defined in CONTRACTS.md — field names, types, error shapes, naming consistent across every story that touches it. A contract that's mentioned but not defined is a BLOCK. So is a contract entry missing any of its three parts — the exact shape, one populated example value, or the failure shape (what an error actually returns): a signature alone lets two workers imagine two different shapes, and they will.
 
-**Acceptance-check audit:** every check must be a runnable command with an expected output, and it must actually fail on a trivially wrong implementation. A check that returns success from an empty handler (a bare 200 with no body assertion, for example) passes trivially — demand the check assert on the actual content, not just that something responded.
+**Acceptance-check audit:** every check must be a runnable command with an expected output, and it must actually fail on a trivially wrong implementation. A check that returns success from an empty handler (a bare 200 with no body assertion, for example) passes trivially — demand the check assert on the actual content, not just that something responded. Every check must also declare its grader: a card with no grader is a finding; an `llm_judge` grader with no pinned rubric is a finding; a card whose check depends on the model eyeballing bulk data instead of a script filtering it first is a finding.
+
+**Authoring smells** — scan every card, and the plan's own prose, for these; each hit is a finding:
+- **Exhortation smell:** "CRITICAL", "make sure", "carefully", "be very careful to". Instructions don't add capability — demand each one be replaced with a check, a script, or a contract entry.
+- **One-sided tradeoff smell:** any cost or priority rule stating only one side ("escalation is expensive") with no counter-cost. A worker given one side over-optimizes it — demand both sides stated, or the rule removed.
+- **Ban-list smell:** a long NEVER-list. Each entry is a patch over a structural gap — demand it convert to structure: a field, a contract entry, a check.
+- **Stale-patch audit:** wording that reads as a workaround for a weaker model's known failure ("do not attempt X, models get this wrong"). On any model-tier upgrade these invert from protective to harmful — the model withholds what it knows. Flag them for re-validation.
+- **Structure test:** if you can't tell a card's instruction from its policy from its data, neither can the worker — demand the card separate them.
 
 **Prereq hunt:** scan every story card for external services, keys, subscriptions, accounts, domains, OAuth registrations, or hardware — anything only a human can provide — and cross-check each one against PREREQS.md. PREREQS.md tracks each item's status as `pending`, `done`, or `verified`. Any external dependency named in a story card but missing from PREREQS.md is a **BLOCK** — no exceptions, this is the check that stops a worker from hitting a missing API key mid-run.
 

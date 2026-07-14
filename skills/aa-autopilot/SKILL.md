@@ -10,7 +10,7 @@ metadata:
 
 Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `./.agents/agent-agile/playbooks`, (4) `~/.claude/agent-agile/playbooks`, (5) `~/.agents/agent-agile/playbooks`, (6) `./playbooks`.
 
-Read `playbooks/execution.md` sections "Autopilot", "Circuit breakers", and "Resume protocol", and follow them exactly; do not re-derive or improvise the loop or soften a circuit breaker.
+Read `playbooks/execution.md` sections "Autopilot" (including "The ambiguity protocol"), "Circuit breakers", and "Resume protocol", and follow them exactly; do not re-derive or improvise the loop or soften a circuit breaker.
 
 ## Wiring
 
@@ -35,6 +35,7 @@ Read `playbooks/execution.md` sections "Autopilot", "Circuit breakers", and "Res
 ## Hard rules
 
 - Preflight is mandatory before the loop launches and again before every epic inside it — never skip the per-epic re-check to save a step.
+- Any ambiguity the plan doesn't answer goes through the ambiguity protocol in `playbooks/execution.md` "Autopilot": check `.planning/DECISIONS.md` first (settled = applied, never re-asked), auto-resolve only what is reversible, pattern-matching, free, and security-clean (recording it in the ledger), and treat irreversible/paid/security ambiguity in full-auto as a circuit breaker — never guess on the user's behalf.
 - A circuit breaker always stops the loop; it is never a reason to substitute a fake key, a stub response, or a "pretend this succeeded" workaround.
 - Gate mode is fixed for the whole run once set at the start — don't silently switch modes mid-loop because one epic looks safe.
 - Every session, including one that stops mid-loop, closes with exactly one `STATE.md` update — never leave the next session to reconstruct status from the epic history.
