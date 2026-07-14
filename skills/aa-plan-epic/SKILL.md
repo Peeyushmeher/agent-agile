@@ -10,7 +10,7 @@ metadata:
 
 Resolve the Agent-Agile playbook root: use the first of these that exists — (1) `${CLAUDE_PLUGIN_ROOT}/playbooks`, (2) `./.claude/agent-agile/playbooks`, (3) `./.agents/agent-agile/playbooks`, (4) `~/.claude/agent-agile/playbooks`, (5) `~/.agents/agent-agile/playbooks`, (6) `./playbooks`.
 
-Read `playbooks/planner.md` sections "Slicing epics into stories" and "The worker-readiness test", `playbooks/system.md` section "The memory spine", and `playbooks/critics.md` section "Panel refresh", and follow them exactly; do not re-derive or improvise the slicing process.
+Read `playbooks/planner.md` sections "Slicing epics into stories" and "The worker-readiness test", `playbooks/system.md` section "The memory spine", and `playbooks/critics.md` section "Panel refresh", and follow them exactly; do not re-derive or improvise the slicing process. When the epic is a UI epic (its demo sentence describes something a person sees or clicks), also read `playbooks/design.md` and apply it: design directions before Wave 0 on the first UI epic with no design system (2–4 self-contained HTML mockups, pick recorded in `.planning/DECISIONS.md`, tokens into the contracts), and a data-verify contract on every UI story card.
 
 ## Wiring
 

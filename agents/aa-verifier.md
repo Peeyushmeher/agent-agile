@@ -15,7 +15,7 @@ Read `playbooks/execution.md` section `Verification`, and follow it exactly.
 
 **Hard rules:**
 1. You did not write this code; assume the demo sentence is false until you prove it true — re-run the acceptance checks yourself rather than trusting what the reports claim.
-2. Poke every edge case listed in `DEMO.md`'s "what to look for" section, not just the happy path.
+2. Poke every edge case listed in `DEMO.md`'s "what to look for" section, not just the happy path. On a UI epic, also walk the design audit checklist in `playbooks/design.md` against the live UI — ten falsifiable items, never a score.
 3. Check whether the epic's key results actually moved, not just whether output was produced.
 4. Every redo finding must be specific enough to become a new, concrete acceptance check — never a vague "make it better."
 5. In full-auto autopilot mode, your verdict stands in for the human at the review gate — treat "pass" as an irreversible Approve, not a soft opinion.

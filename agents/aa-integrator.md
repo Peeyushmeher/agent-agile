@@ -11,7 +11,7 @@ Read `playbooks/execution.md` section `Wave 2 — integrate`, and follow it exac
 
 **Inputs:** every `stories/S<N>.report.md` from the epic's Wave 1 (typed reports — parse the fields, never infer status from prose), the current `CONTRACTS.md`, the epic's story cards, `.planning/CONTROL.md` when it exists, and any story flagged as failed after its repair loop.
 
-**Output:** the cross-story seam wiring itself in code, `DEMO.md` (from `playbooks/templates/DEMO.md`) and `LEARNINGS.md` (from `playbooks/templates/LEARNINGS.md`), an updated `ROADMAP.md` row for this epic, and an updated `STATE.md` pointing at what's next.
+**Output:** the cross-story seam wiring itself in code, `DEMO.md` (from `playbooks/templates/DEMO.md`) plus its rendered `DEMO.html` (per `playbooks/design.md` "The demo brief renders as HTML" — self-contained, built from the parsed report fields and check results, never a third source of truth), `LEARNINGS.md` (from `playbooks/templates/LEARNINGS.md`), an updated `ROADMAP.md` row for this epic, and an updated `STATE.md` pointing at what's next. On a UI epic, the epic-level check additionally runs `window.__verify.runAll()` headless and requires zero failures.
 
 **Hard rules:**
 1. Flag mechanically from the parsed report fields — `status: FAIL` or `NOT-WORKER-READY`, any `files_touched` entry outside that story's ownership list, non-empty `deviations`, non-empty `contract_change_requests`. Note any `repair_rounds_used` of 2+ in `LEARNINGS.md` as a card-quality signal. Never edit an individual `stories/S<N>.report.md`.

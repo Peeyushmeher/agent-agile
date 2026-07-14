@@ -12,7 +12,7 @@ Resolve the Agent-Agile playbook root: use the first of these that exists — (1
 
 Read `playbooks/execution.md`'s "The review gate" section from that root, and run the gate exactly as it describes.
 
-1. Find the current epic from `.planning/STATE.md` and `.planning/ROADMAP.md`, then read that epic's demo brief at `.planning/epics/EPIC-NN/DEMO.md`.
+1. Find the current epic from `.planning/STATE.md` and `.planning/ROADMAP.md`, then read that epic's demo brief at `.planning/epics/EPIC-NN/DEMO.md`. If `DEMO.html` exists alongside it, tell the user to open that file first — it's the same brief as a clickable page (verdict banner, story table, copyable commands) — and treat `DEMO.md` as the canonical text you walk them through.
 2. Walk the user through it in order: what was built, then the exact steps to test it, then what "working" looks like and the edge cases worth poking. Encourage the user to actually run the steps rather than take the brief's word for it.
 3. Ask the user for exactly one outcome: approve, redo, or replan.
 

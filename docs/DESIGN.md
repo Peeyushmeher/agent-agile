@@ -132,7 +132,9 @@ The #1 silent killer of autonomous runs: a worker hits a missing API key at 2am 
     CONTRACTS.md    # Wave 0 output. Frozen during the wave. Every interface: exact shape + populated example + failure shape.
     stories/S1.md…  # Story cards (5 fields)
     stories/SN.report.md   # Typed report per completed story (templates/REPORT.md) — parsed by Wave 2, never inferred from prose
-    DEMO.md         # Demo brief (what was built / how to test / what to look for)
+    directions/D1..4.html  # UI epics, optional: clickable design directions; the pick lands in DECISIONS.md
+    DEMO.md         # Demo brief (what was built / how to test / what to look for) — canonical, machine-read
+    DEMO.html       # The same brief rendered as a self-contained clickable page for the human gate
     LEARNINGS.md    # Written at epic close: deviations, gotchas, contract changes
 ```
 
@@ -184,7 +186,8 @@ The pre-flight prints a **readiness dashboard** before Wave 1 — contracts pinn
 - **Redo:** user tips (or Verifier findings) become **new acceptance checks** on the affected stories; the wave re-runs. Feedback becomes testable — a redo can't miss the same point twice. Once green, the new check joins `CONTROL.md`, so a bug that reached the gate once is re-checked mechanically at every Wave 2 after.
 - **Replan:** epic back to slicing; roadmap after it re-examined.
 - **Approve:** the epic-level check joins `CONTROL.md` — every approved epic leaves a permanent regression tripwire behind it (set capped; oldest non-demo rows retire).
-- **Demo brief (DEMO.md) is a required artifact, not vibes:** what was built · exact steps/URL/command to test · what "working" looks like + edge cases to poke.
+- **Demo brief (DEMO.md) is a required artifact, not vibes:** what was built · exact steps/URL/command to test · what "working" looks like + edge cases to poke. Rendered alongside it: **DEMO.html**, a self-contained clickable page built from the parsed typed reports (verdict banner, story table, control-set results, copyable commands) — the human surface; the markdown stays canonical for machines.
+- **UI epics get the design layer** (`playbooks/design.md`): optional pre-Wave-0 **design directions** (2–4 self-contained HTML mockups; pick → DECISIONS.md, tokens → contracts) · a required **data-verify contract** per UI story (`data-verify-*` attributes + headless `window.__verify.runAll()` with a deterministic grader — "look at it and see" is never an acceptance check) · a **design audit** in verification (10 falsifiable checklist items — interaction states, empty/loading/error triad, spacing/type scales, contrast, keyboard path, responsive floor, one primary action, slop tells, motion — never a score; findings become acceptance checks and, once green, CONTROL.md rows).
 
 ## 7. Autopilot (`/aa-autopilot`)
 

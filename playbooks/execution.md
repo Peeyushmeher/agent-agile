@@ -65,7 +65,9 @@ Dispatch one fresh-context smart-tier subagent as integrator. Its job:
 - Wire the cross-story seams the individual workers couldn't see — the places where two stories' outputs need to connect.
 - Run the epic-level acceptance check: the demo sentence, exercised for real (the actual command or flow it describes, not a re-statement of the story-level checks). If it fails on a seam the integrator owns — cross-story wiring, not any single story's internals — repair and re-run, up to **3 repair rounds**. Never reach into a story's owned files to force a pass: a failure inside one story's slice is that story's flag, routed to the gate, not something to patch over.
 - **Run the control set:** every row in `.planning/CONTROL.md`. These are previously-green checks from earlier epics — a row that fails means this epic broke something that used to work, and that is a finding for the gate exactly as if the verifier had found it. Skip only when the file doesn't exist yet (Epic 1).
+- **UI epics only:** run `window.__verify.runAll()` headless across the whole epic and require zero failures, per `playbooks/design.md` "The data-verify contract" — in addition to exercising the demo sentence, never instead of it.
 - Write `DEMO.md` (template: `playbooks/templates/DEMO.md`) and `LEARNINGS.md` (template: `playbooks/templates/LEARNINGS.md`). If `STATE.md` records panel-refresh FLAGs for this epic (see `critics.md` "Panel refresh"), copy them into `DEMO.md`'s "what to look for" section so the review gate judges them.
+- **Render `DEMO.html`** next to `DEMO.md`, per `playbooks/design.md` "The demo brief renders as HTML": a self-contained page built from the parsed report fields, dashboard result, and control-set results. `DEMO.md` stays canonical for machines; the HTML is the human surface, never a third source of truth.
 - Flip the epic's row in `ROADMAP.md` to reflect its new status.
 - Update `STATE.md` to point at wherever the epic now sits (verification next, or done).
 
@@ -81,6 +83,7 @@ The verifier:
 - Re-runs the acceptance checks rather than trusting the reports.
 - Pokes the edge cases listed in `DEMO.md`'s "what to look for" section.
 - Checks whether the epic's key results actually moved, not just whether output was produced.
+- On a UI epic, additionally walks the design audit checklist in `playbooks/design.md` against the live UI — ten falsifiable items, no scores; each miss is a finding written concretely enough to become an acceptance check.
 
 Output is a plain verdict: pass, or a redo-list of specific findings.
 
