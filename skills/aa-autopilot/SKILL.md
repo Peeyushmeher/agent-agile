@@ -39,3 +39,5 @@ Read `playbooks/execution.md` sections "Autopilot" (including "The ambiguity pro
 - A circuit breaker always stops the loop; it is never a reason to substitute a fake key, a stub response, or a "pretend this succeeded" workaround.
 - Gate mode is fixed for the whole run once set at the start — don't silently switch modes mid-loop because one epic looks safe.
 - Every session, including one that stops mid-loop, closes with exactly one `STATE.md` update — never leave the next session to reconstruct status from the epic history.
+- The roadmap is done only when the evidence is on disk — every epic row flipped and the final epic's verifier verdict written and passing (the completion promise in `playbooks/execution.md` "Autopilot"). A loop that ends without that evidence reports itself as stopped, not done.
+- Before any second redo of the same epic, run the unsatisfiable-check diagnosis in `playbooks/execution.md` "The review gate": identical finding + unchanged files = verifier-only recheck then breaker, never another paid wave.

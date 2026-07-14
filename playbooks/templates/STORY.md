@@ -8,7 +8,7 @@
 <one relative path per line — this story may touch ONLY these files>
 ```
 
-**Acceptance check:** <runnable command or verifiable assertion, with expected output>
+**Acceptance check:** <runnable command or verifiable assertion, with expected output. Any behavioral expectation is written in EARS shape — "WHEN <trigger>, THE SYSTEM SHALL <observable response>" — a grammar that cannot express "handles X properly," which is the point.>
 
 **Grader:** <how pass/fail is decided — exact_match | numeric_tolerance(±x%) | regex_present | efficiency(<token or wall budget>) | llm_judge(<rubric>). llm_judge only when no deterministic grader exists, and its rubric is pinned here, not improvised at check time.>
 

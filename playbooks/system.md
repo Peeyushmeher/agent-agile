@@ -81,6 +81,26 @@ Three deliberate, narrow exceptions, all slicing-time and all planner-side (work
 2. Slicing reads `DECISIONS.md` when it exists — a settled decision is never re-litigated, and re-asking one is the failure the ledger exists to prevent.
 3. Slicing runs **one targeted grep** across all prior epics' `LEARNINGS.md` for the current epic's files and topics — a search, never a read-everything. Hits get baked into the story cards, so learnings reach workers through the card, not through workers going looking.
 
+## The agent tree — how context flows down and up
+
+Every run is a tree: one orchestrator, one layer of subagents. The rules below are what keep information intact moving down the tree and cheap moving back up. They exist because every handoff is a lossy compression step — chain enough of them and the last agent is working from a rumor.
+
+**The tree stays two levels deep.** Orchestrator → workers, plus sequential passes (integrator, verifier) at the same level. Depth comes from *sequencing* — waves within an epic, epics chained by autopilot — never from *nesting* agents inside agents. Nesting fragments control, silently loses tool access on real harnesses, and adds a lossy hop per generation. And the orchestrator itself never runs as a forked or isolated subagent — an orchestrator's job is spawning, and forked contexts are exactly where spawning breaks; forking is for leaf workers only.
+
+**Down the tree — the dispatch brief.** Every dispatch contains exactly four things, and a dispatch missing any of them produces drift:
+1. **Objective** — one sentence, what done looks like.
+2. **Inputs by path** — file paths the agent reads, never pasted file bodies. Pasted content stays resident in the orchestrator's context and is re-read every turn after; a path costs nothing until the one agent that needs it follows it. (For workers this is already the law: card + `CONTRACTS.md`, ~two paths, nothing else.)
+3. **Output contract** — the exact typed format the agent returns (which template, which verdict structure).
+4. **Boundaries** — what it owns, what it must not touch, and explicitly what sibling agents are covering, so parallel agents can't drift into overlapping work.
+
+**Up the tree — typed compression.** A subagent may burn tens of thousands of tokens doing its work; what comes back is a typed summary — report fields, a verdict structure — plus artifacts written to disk. The work product never travels in the return message; the return is fields the orchestrator parses plus paths to what was produced. The orchestrator never re-reads a subagent's working transcript, and it never holds work products in its own context — pointers and verdicts only.
+
+**Negative space survives the handoff.** The most damaging thing lost between agents is not what was done — it's what was *tried and rejected*, because the next agent repeats the dead end at full price. Worker reports carry a `dead_ends` field; `LEARNINGS.md` carries the epic-level equivalent; redo dispatches must include the prior attempt's dead ends.
+
+**One writer per artifact.** Parallelism is for independent work, never concurrent editing — that's the file-ownership rule generalized: every shared artifact (`STATE.md`, `ROADMAP.md`, `CONTROL.md`, each report file) has exactly one writer at any moment. Agents beyond the writer read or critique; they never co-edit.
+
+**Externalize before full, not after.** The orchestrator writes its state (`STATE.md`, at wave granularity) at every wave boundary as a matter of course — not when context pressure forces it. A plan that lives only in the orchestrator's context dies with the orchestrator's context; a plan on disk lets any fresh session pick up mid-epic.
+
 ## Sprints are scope-boxes
 
 A traditional sprint is a time-box that solves human problems — calendar sync, deadline pressure, stakeholder rhythm. Agents have none of those, so a sprint here is redefined:

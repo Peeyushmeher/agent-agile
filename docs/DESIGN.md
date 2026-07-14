@@ -80,7 +80,8 @@ Story        → one agent's job: self-contained, own files, own acceptance chec
 
 No level below stories. No story points, no ceremonies, no burndown.
 
-- **KRs** must pass 3 tests: measurable by command/count; outcome not output; falsifiable at review with no debate.
+- **KRs** must pass 3 tests: measurable by command/count; outcome not output; falsifiable at review with no debate. Every objective also carries a **counter-metric** — the number that must NOT get worse — closing the path where a KR goes green by making the product worse.
+- **EARS shape for behavioral requirements:** "WHEN <trigger>, THE SYSTEM SHALL <observable response>" — a grammar that cannot express "handles X properly." Applies to KRs, card goals, and acceptance-check expectations; procedural commands exempt.
 - **Initiative kill-filter:** "does this epic serve an initiative? No → cut."
 - **Epic DoD** is always a demo sentence: *"I can do X and see Y."*
 - **Story card = exactly five fields:** Goal (one sentence) · Files it owns (explicit list — the parallelism key) · Acceptance check (runnable command / verifiable assertion) · Grader (how pass/fail is decided: `exact_match` / `numeric_tolerance(±x%)` / `regex_present` / `efficiency(<budget>)` / `llm_judge(<rubric>)` — the last only when nothing deterministic exists, rubric pinned on the card) · Contracts it consumes.
@@ -146,7 +147,7 @@ The #1 silent killer of autonomous runs: a worker hits a missing API key at 2am 
 
 ## 5. Execution engine (`/aa-execute-epic`)
 
-Orchestrator stays lean — reads cards, dispatches, collects; never writes code.
+Orchestrator stays lean — reads cards, dispatches, collects; never writes code. Context flow follows the **agent-tree doctrine** (`playbooks/system.md` "The agent tree"): a flat two-level tree (depth by sequencing, never nesting; the orchestrator is never itself forked); down-tree = a four-part dispatch brief (objective · inputs by path, never pasted bodies · typed output contract · non-overlap boundaries); up-tree = typed fields + artifacts on disk, never transcripts; `dead_ends` preserved at every handoff so no agent repeats a rejected approach; one writer per shared artifact; `STATE.md` externalized at every wave boundary as routine. (Grounded in Anthropic's multi-agent research system + context-engineering posts, Cognition's single-writer argument, and the GSD context-fork nesting failure.)
 
 ```
 Wave 0 — CONTRACTS (serial, smart tier)
@@ -196,6 +197,8 @@ Runs every epic back-to-back until the roadmap is done: plan epic → execute �
 - **Gate modes, set at start:** `--gate full-auto` (Verifier takes the human's seat at every epic gate; demo briefs accumulate for end review) · `--gate checkpoint` (auto within an epic, ping the human between epics) · default = interactive gate every epic.
 - **Circuit breakers (pre-registered, non-negotiable):** epic fails verification twice after redo → STOP, write STATE.md with where/why. Missing prereq discovered → STOP per §3.4. Never build ten epics on top of a broken one ("death train" prevention).
 - **Ambiguity protocol:** any question the plan doesn't answer checks `DECISIONS.md` first (settled = applied, never re-asked). Auto-resolve only what is reversible, pattern-matching, free, and security-clean — recorded in the ledger. Anything else routes to the user by gate mode; in full-auto, irreversible/paid/security ambiguity is a circuit breaker, never a guess. Every gate ruling, panel BLOCK resolution, and replan rationale is appended to the ledger the moment it's made.
+- **Completion promise:** the run may not declare the roadmap done without the evidence on disk — every epic row flipped + the final verifier verdict written and passing. No evidence = the run reports itself stopped, not done.
+- **Unsatisfiable-check diagnosis:** identical finding + unchanged files after a redo = the check is wrong, not the work — verifier-only recheck, then breaker. Never a second paid wave to prove the same impossibility.
 - Preflight requires PREREQS.md fully verified before launch.
 
 ## 8. Agents roster

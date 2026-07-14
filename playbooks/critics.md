@@ -34,6 +34,7 @@ On a 5+ epic roadmap, the plan-time panel judged Epic 1's cards; the epics slice
 
 **Attack list:**
 1. For each KR: is it falsifiable at review with no debate? Is it an outcome or an output? Run the kill test — *could every KR pass while a real user still fails at the one action the project exists for?* If yes, it's an output-KR — flag it and demand a rewrite. Apply the three tests to every KR: measurable by a command or a count, outcome not output, falsifiable at review with no debate.
+   Then the gaming test: does the objective carry a counter-metric — the number that must NOT get worse — and could the KRs be hit by making the product worse in a way the counter-metric wouldn't catch? A KR set with no counter-metric is a finding; a counter-metric that doesn't guard the obvious gaming path is too.
 2. Kill-filter every epic: which initiative does it serve? No answer — recommend cutting it.
 3. Minimality: what could be deleted from the current plan with every epic's demo sentence still true? Anything deletable is a finding.
 4. Out-of-scope list: is it specific and real, or a fig leaf? A short or generic list means scope will creep — that's a finding on its own.
@@ -60,6 +61,7 @@ Story cards live at `.planning/epics/EPIC-NN/stories/S*.md`, one file per story,
 - unscoped universal quantifiers: all, any, both (whole set, or each element — which one?)
 - escape clauses: "if practical", "as appropriate", "as needed", "where possible", "handle errors", "etc."
 - non-atomic requirements: two behaviors described in one sentence — demand a split
+- behavioral statements that don't fit EARS shape ("WHEN <trigger>, THE SYSTEM SHALL <observable response>"): if a requirement can't be rewritten in that grammar, it has no trigger or no observable response — demand the missing half
 
 **INVEST check** on each card: Independent (no dependency on a sibling story's output — a card that reads another Wave-1 story's output is a BLOCK, not parallel-safe), Valuable (serves its epic's demo sentence), Small (one agent, one pass), Testable (an acceptance check exists and would actually fail on a wrong implementation).
 

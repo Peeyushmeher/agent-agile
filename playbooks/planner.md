@@ -104,6 +104,10 @@ Never proceed with a vague answer — not just on the 8 intake questions, but on
 
 **Kill test for any Key Result:** could this KR be true and the project still have failed? If yes, it's measuring output, not outcome — rewrite it. Every KR must pass three tests: measurable by a command or a count, an outcome not an output, and falsifiable at review with no debate.
 
+**Counter-metric, always.** Every objective names one number that must NOT get worse while the KRs are chased — the gaming path's tripwire. "80% complete onboarding" invites deleting the necessary-but-annoying validation step; "support tickets per user do not rise" closes that path. One line in `PROJECT.md`, non-optional.
+
+**EARS shape for behavioral requirements.** Any requirement describing behavior — in a KR, a card goal, or an acceptance check's expected output — is written as "WHEN <trigger>, THE SYSTEM SHALL <observable response>" (variants: WHILE <state>, IF <error> THEN). The grammar physically cannot express "handles errors properly" or "works reliably": no trigger, no observable response, doesn't fit the sentence. Purely procedural checks ("test suite exits 0") are exempt — EARS governs behavior statements, not command invocations.
+
 Pushback is not adversarial for its own sake — it's spending planning-time tokens once so a cheap-tier worker never has to guess later. Stop pushing back only once the answer is specific enough that a worker could act on it without asking a follow-up question.
 
 ---
@@ -239,15 +243,16 @@ This list gets hunted for gaps during panel review — a missed prerequisite is 
 For a user who already has a plan, PRD, or spec written down, rather than a one-line idea:
 
 1. **Read the document in full.** Do not summarize from a skim — the gaps that matter are usually in the details.
-2. **Answer the 8 intake questions from the document alone.** Do not ask the user anything yet. Where the document answers a question thinly (see Pushback patterns for what "thin" looks like), mark it as a gap rather than guessing.
-3. **Ask the user only the gaps.** One question at a time, same pushback discipline as a fresh intake — a gap answer that's still vague gets pushed back on exactly as it would in the 8-question flow.
-4. **Map the result onto the plan format** and check three things explicitly:
+2. **Discover the standards (brownfield only).** When the import comes with an existing codebase, the plan document is not the only input — the repo's unwritten conventions are load-bearing too, and workers who don't know them write technically correct code that doesn't match the house style. Before slicing anything, mine the codebase for its tribal knowledge: naming patterns, error-handling shape, file/module layout, test conventions, existing utilities a story might otherwise re-implement. Write the findings into Wave 0's `CONTRACTS.md` Conventions section (and project-wide ones as `PROJECT.md` constraints), so every worker inherits the house style through the contract instead of guessing at it. Skip for greenfield imports — record nothing.
+3. **Answer the 8 intake questions from the document alone.** Do not ask the user anything yet. Where the document answers a question thinly (see Pushback patterns for what "thin" looks like), mark it as a gap rather than guessing.
+4. **Ask the user only the gaps.** One question at a time, same pushback discipline as a fresh intake — a gap answer that's still vague gets pushed back on exactly as it would in the 8-question flow.
+5. **Map the result onto the plan format** and check three things explicitly:
    - Are the Key Results in the document derivable into OKRs that pass the three tests, or do they need rewriting?
    - Are the epics in the document demoable — does each have, or can each get, a one-sentence demo of user value?
    - Are the stories (if the document has any) worker-ready, or do they fail the worker-readiness test as written?
-5. **Produce a gap list, not a rewrite.** The output of the import path is what's missing or broken against the plan format — not a silent replacement of the user's document with a new one.
-6. **Run the full critic panel with no leniency.** An imported plan gets the same adversarial review as a freshly drafted one; "it was already written" earns no pass.
-7. **Resolve to one of three exits:**
+6. **Produce a gap list, not a rewrite.** The output of the import path is what's missing or broken against the plan format — not a silent replacement of the user's document with a new one.
+7. **Run the full critic panel with no leniency.** An imported plan gets the same adversarial review as a freshly drafted one; "it was already written" earns no pass.
+8. **Resolve to one of three exits:**
    - **Proceed** — translate the document into the plan format and run the current epic.
    - **Reshape** — back to intake, carrying the panel's findings as the starting gaps.
    - **Kill** — write a learnings file explaining why, and stop. This is a valid outcome: a plan that fails its own review before a single story runs has been saved, not wasted.
