@@ -101,6 +101,12 @@ Every run is a tree: one orchestrator, one layer of subagents. The rules below a
 
 **Externalize before full, not after.** The orchestrator writes its state (`STATE.md`, at wave granularity) at every wave boundary as a matter of course — not when context pressure forces it. A plan that lives only in the orchestrator's context dies with the orchestrator's context; a plan on disk lets any fresh session pick up mid-epic.
 
+**The context budget.** A context window degrades long before it fills: measured quality loss begins around 40–50% fill, and the damage tracks *junk density* — stale reports, superseded plans, re-read files — more than raw length. The harness's auto-compaction fires near ~80–90%, which is the model's least capable moment; it is the emergency brake, never the plan. Operating bands:
+
+- **The orchestrator runs in the front half of its window.** At every wave boundary, check fill; past roughly 40–50%, close the session — `STATE.md` is wave-granular precisely so a fresh session resumes mid-epic losing nothing. A context handoff is routine hygiene, identical in outcome to a session that never stopped. Never plan to compact; plan to hand off.
+- **Workers are bounded by construction, not by percentage.** A worker-ready card plus contracts is a few kilobytes in, a typed report out, and the work between should fit comfortably in tens of thousands of tokens — successful focused coding runs stay that small *because they're focused*. A worker that finds itself grinding deep into its window wasn't given a card that's too hard; it was given a card that's too big — that's a slicing defect to report, not a reason to push deeper.
+- **Junk stays out by the rules already above:** pointers not bodies, typed compressed returns, no transcript re-reads, compute over context. The budget isn't a separate discipline — it's what those rules buy.
+
 ## Sprints are scope-boxes
 
 A traditional sprint is a time-box that solves human problems — calendar sync, deadline pressure, stakeholder rhythm. Agents have none of those, so a sprint here is redefined:
