@@ -2,12 +2,25 @@
 
 Newest first. Each entry says *why* the release exists, not just what changed.
 
-## Unreleased
+## 0.2.0
 
-The two planning upgrades the stress test argued for — closing the dimension the competitor won.
+Agents fail at handoffs, so this release makes every handoff machine-checkable. Grounded in Anthropic's CwC 2026 material (a subagent returning "fairly confident" instead of `0.72` failed an eval; 216k→7.6k tokens by scripting instead of reading) and a full survey of the lane — every steal-worthy idea from GSD, BMAD, gstack, spec-kit, Kiro, Agent OS, superpowers, and Ralph is either in here or documented as rejected.
 
-- **Research fan-out + risk fixtures** — multi-epic roadmaps now dispatch two parallel smart-tier researchers (domain edges, ecosystem prior art) after the first roadmap draft, producing a `RESEARCH.md` risk register. Risks ranked `fixture` tag their target epic on the roadmap and become fixture stories — a boundary dataset plus assertion harness, pinned before feature stories build on the edge. The spec auditor enforces it: an ignored fixture row is a BLOCK.
-- **Panel-pass scaling** — the critic-panel gate now scales with roadmap size: 1 epic skips, 2–4 get one full pass, 5+ add a spec+execution panel refresh at every third slicing, so long autopilot runs don't coast on a review of Epic 1's cards. Bounded, position-derived, no stored state.
+- **Typed story reports** — `SN.report.md` is now a fixed schema the integrator parses, not reads: status, files touched, acceptance command + verbatim output, deviations, contract-change requests, dead ends. Prose demoted to a `notes:` field.
+- **Contracts pin exact shapes** — every cross-story interface needs the exact return shape, one populated example, and the failure shape. Signatures alone are not a contract.
+- **Graders + control cases** — acceptance checks declare one of 5 grader types; every epic re-runs a previously-passing control case in Wave 2 so a "fix" that regresses something is caught mechanically; repair-loop fixes mint new control cases (capped).
+- **Bounded repair loops** — story self-verify and Wave 2 verify run up to 3 repair rounds against the deterministic check before FAIL; unsatisfiable-check diagnosis (same finding + unchanged files after a redo = the check is wrong) stops the expensive failure spiral.
+- **DECISIONS.md ledger + ambiguity protocol** — settled questions are never re-asked across sessions; ~70–80% of ambiguities auto-resolve via encoded principles; security/paid/irreversible always escalate.
+- **Readiness dashboard** — a mechanical gate table before Wave 1: contracts frozen, every card typed, every check graded, control case declared.
+- **Design layer** (`playbooks/design.md`) — UI stories carry a `data-verify-*` DOM contract with headless `__verify.runAll()`; verifier walks a 10-item falsifiable design audit; every epic's review gate renders a clickable `DEMO.html` from parsed reports; 2–4 HTML design directions pre-Wave-0.
+- **The agent tree** (`playbooks/system.md`) — two-level tree, depth by sequencing never nesting; four-part dispatch briefs (inputs by path, never pasted); typed ~1–2K compressed returns; `dead_ends` survive handoffs; one writer per artifact; STATE.md externalized at every wave boundary.
+- **Context budget doctrine** — orchestrator operates in the front half of its window (≤~40–50% fill); predictive check at wave boundaries (fill + next-wave estimate ≥~60% → hand off first); workers can return PARTIAL for one orchestrator-dispatched continuation; auto-compact is an emergency brake, never a plan.
+- **Steal-list v2** — EARS grammar for acceptance checks/KRs, `discover-standards` step in `/aa-import`, counter-metrics ("do not optimize") per objective, completion-promise gate on autopilot exit, quality/balanced/budget cost profiles, constitution versioning on PROJECT.md, broad-regression cadence at panel-refresh epics.
+- **Research fan-out + risk fixtures** — multi-epic roadmaps dispatch two parallel smart-tier researchers (domain edges, ecosystem prior art) after the first roadmap draft, producing a `RESEARCH.md` risk register. Risks ranked `fixture` become fixture stories pinned before feature stories build on the edge; an ignored fixture row is a BLOCK.
+- **Panel-pass scaling** — the critic-panel gate scales with roadmap size: 1 epic skips, 2–4 get one full pass, 5+ add a spec+execution panel refresh at every third slicing. Bounded, position-derived, no stored state.
+- **QUICKSTART.md** — step-by-step first run, and the README quickstart no longer skips `/aa-new-project`.
+
+12 of these land below the user surface — no new commands, no new flags. The command surface stays at ~11.
 
 ## 0.1.2
 
