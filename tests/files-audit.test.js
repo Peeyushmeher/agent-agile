@@ -9,7 +9,7 @@ const script = resolve('scripts/files-audit.js');
 
 function fixture() {
   const repo = mkdtempSync(join(tmpdir(), 'aa-audit-'));
-  execSync('git init -q && git commit -q --allow-empty -m base', { cwd: repo });
+  execSync('git init -q && git -c user.name=aa -c user.email=aa@test commit -q --allow-empty -m base', { cwd: repo });
   const stories = join(repo, '.planning', 'epics', 'EPIC-01', 'stories');
   mkdirSync(stories, { recursive: true });
   writeFileSync(join(stories, 'S1.md'), '# S1\n```files\nsrc/a.js\n```\n');

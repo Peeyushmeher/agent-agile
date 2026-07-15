@@ -2,6 +2,8 @@
 
 Newest first. Each entry says *why* the release exists, not just what changed.
 
+**Stability policy:** the command surface (the ~11 `/aa-*` commands), template field names (`REPORT.md`, `STATE.md`, `PREREQS.md`, and the other `.planning/` templates), and the `.planning/` directory layout are **frozen** — breaking any of them requires a version bump and an explicit callout in these notes. Playbook internals, agent definitions, prose, and scripts **may change freely** between releases; depend on the fields and commands, not the wording.
+
 ## 0.2.1
 
 Hotfix + hardening from the first adversarial deep-dive of the system itself (5 finders → 48 findings → 2 independent verifiers). The theme of what it caught: in a handful of places, "machine-checkable" was an instruction rather than a mechanism.

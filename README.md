@@ -8,6 +8,9 @@
 /_/   \_\____|_____|_| \_| |_|   /_/   \_\____|___|_____|_____|
 ```
 
+[![Tests](https://github.com/Peeyushmeher/agent-agile/actions/workflows/test.yml/badge.svg)](https://github.com/Peeyushmeher/agent-agile/actions/workflows/test.yml)
+[![npm](https://img.shields.io/npm/v/agent-agile)](https://www.npmjs.com/package/agent-agile)
+
 *Every other system helps agents build the thing right. Agent-Agile decides if it's the right thing — then builds it right, cheaper.*
 
 An open-source planning + execution system for AI coding agents, installable in Claude Code, Codex CLI, and OpenCode. Bring **a rough idea in one sentence** — no PRD required.
@@ -20,7 +23,7 @@ rough idea → grill → OKRs → critic panel (can KILL) → prereqs → parall
 
 ## Why this exists
 
-Every incumbent planning system — GSD, BMAD, spec-kit, claude-flow, Task Master, and the rest of the 14-system survey behind this project — starts *after* someone has already decided the project is worth building. They're excellent at turning a decision into a plan. None of them help you make the decision, and none of them can tell you to stop.
+Every incumbent planning system — GSD, BMAD, spec-kit, claude-flow, Task Master, and the rest of the 14-system survey behind this project (July 2026 snapshot) — starts *after* someone has already decided the project is worth building. They're excellent at turning a decision into a plan. None of them help you make the decision, and none of them can tell you to stop.
 
 Agent-Agile ships three capabilities nobody else does: an **OKR/outcome layer** so plans start from "how do we know it worked" instead of a feature list; an **adversarial critic panel with kill authority** — four fresh-context critics attack every plan before a single story runs, and the market critic can kill a project on evidence, not vibes; and **cost-tiered model routing per story**, enforced by a worker-readiness test at slicing time, not left to a global setting nobody revisits.
 
@@ -78,6 +81,31 @@ The five dependency rules that structure out parallelism instead of managing it:
 
 ---
 
+## The guarantees
+
+What mechanically cannot happen — each backed by a parsed field, a script, or a fresh-context re-check, not by an instruction someone hopes gets followed:
+
+- **A story cannot close without its check passing.** Every card carries a runnable acceptance check with a declared grader type; the worker runs it (up to 3 repair rounds) before it may report `PASS`, and the command plus its verbatim output land in a typed report the integrator *parses*, never reads.
+- **Two stories cannot own the same file.** `collision-check.js` refuses to launch the wave on any overlap — before execution, not after. At Wave 2, `files-audit.js` diffs the *actual* changed files against declared ownership and reported `files_touched`, so an edit omitted from a report can't hide either.
+- **Self-reports are never the last word.** A fresh-context verifier that wrote none of the epic's code re-runs the acceptance checks and works goal-backward from the demo sentence before anything reaches the review gate.
+- **A fix can't silently break what already worked.** Every approved epic's check joins `CONTROL.md` and re-runs at every following Wave 2; panel-refresh epics re-run every prior epic's full suite.
+- **A settled question is never re-asked.** Decisions persist in `DECISIONS.md`; security, paid, and irreversible calls always escalate to you.
+- **What it couldn't verify, it says so.** Anything built but unverifiable in your environment surfaces as `unverified:` at the gate — presented as *your* test, never as "verified."
+
+---
+
+## Known limitations
+
+Honesty over polish — what this tool is currently bad at:
+
+- **v0.x, single author, small install base.** Live evidence is one blind-judged head-to-head against two incumbents plus an adversarial multi-agent self-audit — not years of field use. A full reference build (idea → shipped artifact, transcript included) is the next milestone and will land in `examples/`.
+- **Some guardrail caps are agent-followed, not harness-enforced.** Repair-round and relay caps are recorded in typed fields and cross-checked downstream, but no hook physically stops an agent mid-dispatch. The self-audit that found this is public in the release notes; hardening is ongoing.
+- **UI verification asserts probes, not pixels.** `__verify.runAll()` checks DOM contracts; a visually broken component can pass probes. A visibility probe is on the roadmap; the verifier's design audit is the current backstop.
+- **Context budgeting is self-estimated.** Harnesses expose no token-fill API, so wave-boundary handoff decisions rest on the orchestrator's own estimate.
+- **Whatever your machine can't verify becomes your job.** By design — capability is discovered per-run, never declared — but it means mobile/device/store steps land on your side of the split statement, stated up front.
+
+---
+
 ## Command reference
 
 | Command | Purpose |
@@ -120,5 +148,7 @@ Agent-Agile plays well with skill packs already installed in your harness — su
 **Can it run unattended?** Yes. `/aa-autopilot --gate full-auto` chains every epic with the Verifier standing in for the human gate, and pre-registered circuit breakers stop it before it builds ten epics on top of a broken one.
 
 **No timelines?** By doctrine. Sprints are scope-boxes, not time-boxes — a sprint ends when the demo sentence is true, not on a date. No durations or estimates appear anywhere in this system.
+
+**What can I depend on not changing?** The command surface (~11 `/aa-*` commands), the template field names (`REPORT.md`, `STATE.md`, `PREREQS.md`, …), and the `.planning/` layout are stable — a breaking change to any of them gets a version bump and a loud release-note callout. Playbook internals, prose, and scripts may change freely between releases. Policy lives at the top of [RELEASE-NOTES.md](RELEASE-NOTES.md).
 
 **License? Token?** MIT. No token, ever.
